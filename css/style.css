@@ -38,6 +38,9 @@ button, .btn {
   background: var(--panel2); color: var(--text);
   border: 1px solid var(--line); border-radius: 8px; padding: 9px 16px;
 }
+a.btn { text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
+a.btn.xlink { padding: 9px 13px; font-weight: 700; letter-spacing: .04em; }
+a.btn.xlink:hover { border-color: var(--gold); color: var(--gold); }
 button:hover, .btn:hover { border-color: var(--gold-dim); }
 button.primary { background: var(--gold); color: #17120a; border-color: var(--gold); font-weight: 600; }
 button.primary:hover { background: var(--coral); border-color: var(--coral); color: #20100c; }
@@ -55,6 +58,22 @@ h2 { font-size: 17px; margin: 30px 0 12px; color: var(--gold); letter-spacing: .
 .row.between { justify-content: space-between; }
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 @media (max-width: 820px) { .grid2 { grid-template-columns: 1fr; } }
+
+/* Phones: the header wraps to two rows instead of overflowing. */
+@media (max-width: 760px) {
+  header.site .wrap { flex-wrap: wrap; height: auto; padding: 9px 0 8px; gap: 8px 10px; }
+  .brand { flex: 1 1 100%; }
+  .brand small { display: inline; margin-left: 8px; letter-spacing: .04em; }
+  nav { order: 2; display: flex; gap: 14px; }
+  nav a { font-size: 13px; }
+  .spacer { order: 3; }
+  #lang { order: 4; }
+  a.xlink { order: 5; }
+  #connect { order: 6; }
+  /* Long contract addresses wrap instead of widening the page. */
+  td, th { word-break: break-all; }
+  td { font-size: 12px; }
+}
 
 table { width: 100%; border-collapse: collapse; font-size: 14px; }
 th { text-align: left; color: var(--muted); font-weight: 500; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; padding: 8px 10px; border-bottom: 1px solid var(--line); }
@@ -99,3 +118,9 @@ hr.sep { border: 0; border-top: 1px solid var(--line); margin: 26px 0; }
 .hero h1 { font-size: 44px; color: var(--gold); letter-spacing: .1em; margin: 0 0 10px; }
 .hero p { color: var(--muted); font-size: 16.5px; max-width: 620px; margin: 0 auto 26px; }
 .cta { display: inline-block; margin: 0 8px; padding: 12px 26px; border-radius: 10px; }
+
+/* Phone hero title: keep the wordmark inside the viewport (rule must come
+   after the base .hero h1 declaration to win the cascade). */
+@media (max-width: 760px) {
+  .hero h1 { font-size: clamp(26px, 9vw, 40px); letter-spacing: .06em; }
+}
