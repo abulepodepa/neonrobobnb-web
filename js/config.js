@@ -14,7 +14,7 @@ const CONFIG = {
   MULTICALL3: "0xcA11bde05977b3631167028862bE2a173976CA11",
 
   /* filled by the deploy step */
-  NNB: "0x076DFa8e8955E119aD8Af81047eD2C1f93F65754",   /* NeonroboBNB — unlimited supply, 7-day window, 75/25 split, team 5K */
+  NNB: "0x076DFa8e8955E119aD8Af81047eD2C1f93F65754",   /* NeonroboBNB — 7-day mint window, 75/25 split, team 5K */
   ART: "0xd1da84b085228BBc928d93634bfF64a7DF1C0f92",   /* NeonroboBNBArt library (linked first; preview calls go here) */
   MARKET: null, /* order book contract — not part of this deploy yet */
 

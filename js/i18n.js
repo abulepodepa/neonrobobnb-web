@@ -298,7 +298,7 @@
       "mint.rule.tx": "每笔上限",
       "mint.rule.txVal": "100（MAX_PER_TX，PoW）",
       "mint.rule.wallet": "每钱包上限",
-      "mint.rule.walletVal": "无（不限量）",
+      "mint.rule.walletVal": "无（不设钱包上限）",
       "mint.rule.team": "团队 / 空投 / 赠品",
       "mint.rule.teamVal": "5,000 个免费（需 PoW）",
       "mint.err.status": "读取状态失败",
