@@ -176,7 +176,9 @@
       "err.nowallet": "Wallet injector not found — open this page from a wallet browser (Binance/MetaMask).",
       "err.gas": "Gas too low — try again.",
       "err.claim": "Nothing to claim.",
-      "err.notowned": "You no longer own that token."
+      "err.notowned": "You no longer own that token.",
+      "err.freequota": "Free quota for this wallet is exhausted.",
+      "err.recipient": "The payment token refused the payout."
     },
 
     zh: {
@@ -348,7 +350,9 @@
       "err.nowallet": "未检测到钱包注入 —— 请用钱包浏览器打开（Binance/MetaMask）。",
       "err.gas": "gas 过低 —— 请重试。",
       "err.claim": "暂无可领取。",
-      "err.notowned": "你已不再持有该代币。"
+      "err.notowned": "你已不再持有该代币。",
+      "err.freequota": "该钱包的免费额度已用完。",
+      "err.recipient": "支付代币拒绝付款。"
     }
   };
 

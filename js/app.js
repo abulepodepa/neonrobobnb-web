@@ -57,12 +57,41 @@
     if (b) b.textContent = addr ? short(addr) : (typeof I18N !== "undefined" ? I18N.t("connect") : "Connect wallet");
   }
 
+  function decodedErrorName(e) {
+    try {
+      const d = e && (e.data || (e.info && e.info.error && e.info.error.data));
+      if (typeof d === "string" && d.length >= 10 && typeof CONFIG !== "undefined") {
+        const p = new (Temple.E.Interface)(CONFIG.ABI.NNB).parseError(d);
+        if (p && p.name) return p.name;
+      }
+    } catch (x) { /* not a custom error of this contract */ }
+    return null;
+  }
+
   function errText(e) {
-    const raw = String((e && (e.reason || e.shortMessage || e.message)) || e);
     const T = (k) => (typeof I18N !== "undefined" ? I18N.t(k) : k);
+    const raw = String((e && (e.reason || e.shortMessage || e.message)) || e);
+
+    /* ethers keeps the decoded custom error on e.revert, while shortMessage
+       often still reads "unknown custom error" — map by name first. */
+    const name = (e && e.revert && e.revert.name) || decodedErrorName(e);
+    if (name) {
+      const map = {
+        WorkOverTarget: "err.work",
+        ProofAlreadyUsed: "err.proof",
+        MiningClosed: "err.paused",
+        BatchTooLarge: "err.batch",
+        PaymentFailed: "err.payment",
+        NothingToClaim: "err.claim",
+        NotTokenOwner: "err.notowned",
+        FreeQuota: "err.freequota",
+        UnsafeRecipient: "err.recipient",
+      };
+      if (map[name]) return T(map[name]);
+    }
+
     if (raw.includes("WorkOverTarget")) return T("err.work");
     if (raw.includes("ProofAlreadyUsed")) return T("err.proof");
-    if (raw.includes("SupplyExhausted")) return T("err.supply");
     if (raw.includes("MiningClosed")) return T("err.paused");
     if (raw.includes("BatchTooLarge")) return T("err.batch");
     if (raw.includes("PaymentFailed")) return T("err.payment");

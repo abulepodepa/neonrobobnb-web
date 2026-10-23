@@ -126,6 +126,7 @@
   let worker = null;
   let found = null;
   let myIds = null;
+  let claimAddr = null;
   let startedAt = 0, hashes = 0;
 
   async function load() {
@@ -282,6 +283,7 @@
       note.textContent = T("mint.scanDone") + r.ids.length + T("mint.foundN");
       $("mine-ids").textContent = r.ids.length ? T("mint.mineList") + r.ids.join(", #") : T("mint.mineNone");
       myIds = r.ids;
+      claimAddr = UI.address;
       refreshClaim();
     } catch (e) { UI.toast(UI.errText(e), true); }
   });
@@ -290,9 +292,16 @@
   async function refreshClaim() {
     const amt = $("claim-amt");
     if (!amt) return;
+    // A different wallet means a different token set — never reuse another
+    // account's scan.
+    if (UI.address !== claimAddr) {
+      claimAddr = UI.address;
+      myIds = null;
+    }
     if (!UI.address || myIds == null) {
       amt.textContent = "—";
       $("claim-state").textContent = T("claim.scanHint");
+      $("claim-go").disabled = false;
       return;
     }
     try {
@@ -310,6 +319,7 @@
       $("scan-note").textContent = T("mint.scanning") + done + "/" + total + "…";
     });
     myIds = r.ids;
+    claimAddr = UI.address;
     $("mine-ids").textContent = myIds.length ? T("mint.mineList") + myIds.join(", #") : T("mint.mineNone");
     await refreshClaim();
   }
