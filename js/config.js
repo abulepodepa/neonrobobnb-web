@@ -14,7 +14,7 @@ const CONFIG = {
   MULTICALL3: "0xcA11bde05977b3631167028862bE2a173976CA11",
 
   /* filled by the deploy step */
-  NNB: "0x9FC4C2927C78F1f9FcF920458A1C7BAa01a56C1C",   /* NeonroboBNB — unlimited supply, 7-day window, 75/25 split */
+  NNB: "0x076DFa8e8955E119aD8Af81047eD2C1f93F65754",   /* NeonroboBNB — unlimited supply, 7-day window, 75/25 split, team 5K */
   ART: "0xd1da84b085228BBc928d93634bfF64a7DF1C0f92",   /* NeonroboBNBArt library (linked first; preview calls go here) */
   MARKET: null, /* order book contract — not part of this deploy yet */
 
@@ -52,6 +52,9 @@ const CONFIG = {
       "function saleConfig() view returns (address paymentToken, uint256 firstPrice, uint256 listPrice, uint256 contractHeld)",
       "function computeHash(address miner, uint256 nonce, bytes32 anchor) pure returns (bytes32)",
       "function mine(uint256 nonce, uint256 count)",
+      "function mineFree(uint256 nonce, uint256 count)",
+      "function freeMintQuota(address who) view returns (uint256)",
+      "function TEAM_ALLOCATION() view returns (uint256)",
       "function traitsOf(uint256 tokenId) view returns (string[9] parts, uint8 tier)",
       "function gridOf(uint256 tokenId) view returns (bytes)",
       "function renderSVG(uint256 tokenId) view returns (string)",
@@ -61,6 +64,7 @@ const CONFIG = {
       "function balanceOf(address holder) view returns (uint256)",
       "event NeonMined(address indexed miner, uint256 indexed tokenId, uint256 seed, uint256 paid, uint8 depth, bytes32 workHash)",
       "event YieldClaimed(address indexed holder, uint256 indexed tokenId, uint256 amount)",
+      "event FreeMinted(address indexed to, uint256 count, uint256 remaining)",
       "event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)",
       /* every custom error must sit in the interface or ethers cannot name it */
       "error BatchTooLarge()",
@@ -75,6 +79,7 @@ const CONFIG = {
       "error ZeroAddress()",
       "error UnsafeRecipient()",
       "error NothingToClaim()",
+      "error FreeQuota()",
       "error BadTokenRange()",
     ],
     ART: [
