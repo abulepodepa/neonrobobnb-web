@@ -37,7 +37,7 @@
       "slot.stamp": "Stamp",
 
       /* ---- home ---- */
-      "hero.p": "Neon robotos mined with proof-of-work (keccak) on BNB Chain. First unit per wallet <b>0.50 USDT</b>, every unit after <b>1.00 USDT</b> — quoted straight from the contract. Supply is unlimited; minting stays open for exactly <b>7 days</b> from deployment. Every mint splits <b>75% to holders</b> and <b>25% to the deployer</b>.",
+      "hero.p": "Neon robotos mined with proof-of-work (keccak) on BNB Chain. First unit per wallet <b>0.50 USDT</b>, every unit after <b>1.00 USDT</b> — quoted straight from the contract. Supply is unlimited; minting stays open for exactly <b>7 days</b> from deployment. Every mint splits <b>75% to holders</b> and <b>25% to the treasury</b>.",
       "hero.cta": "Start mining",
       "hero.gallery": "View gallery",
       "pending": "<b>Contracts not deployed yet.</b> The <span class=\"mono\">NNB</span> / <span class=\"mono\">ART</span> addresses in <span class=\"mono\">js/config.js</span> are still empty — the numbers below appear only after the deploy. This site never shows a number that did not come from the chain.",
@@ -53,7 +53,7 @@
       "how.3": "USDT is approved for the exact total (two steps), then <span class=\"mono\">mine(nonce, count)</span>.",
       "how.4": "Proofs are single-use: one find = one batch (max 100 per transaction).",
       "money.title": "Mint proceeds",
-      "money.p1": "Every mint is split <b>75% to the holder pool</b> (credited per token held, claimable any time) and <b>25% to the deployer</b>.",
+      "money.p1": "Every mint is split <b>75% to the holder pool</b> (credited per token held, claimable any time) and <b>25% to the treasury</b>.",
       "money.p2": "Supply is unlimited, bound only by time: minting closes automatically <b>7 days</b> after deployment (<span class=\"mono\">MINING_END</span>) — there is no extend function.",
       "contracts.title": "Contracts",
       "contracts.nnb": "Collection (NNB)",
@@ -76,7 +76,7 @@
 
       /* ---- mint ---- */
       "mint.h1": "Mine a robo",
-      "mint.sub": "The quote below is your own <span class=\"mono\">priceFor(wallet, n)</span> — first tier <b>0.50 USDT</b>, then a flat <b>1.00 USDT</b>, with no wallet quantity limit (max 100 units per PoW transaction). Every mint splits <b>75% to the holder pool</b> and <b>25% to the deployer</b>; supply is unlimited and mining closes 7 days after deployment.",
+      "mint.sub": "The quote below is your own <span class=\"mono\">priceFor(wallet, n)</span> — first tier <b>0.50 USDT</b>, then a flat <b>1.00 USDT</b>, with no wallet quantity limit (max 100 units per PoW transaction). Every mint splits <b>75% to the holder pool</b> and <b>25% to the treasury</b>; supply is unlimited and mining closes 7 days after deployment.",
       "mint.stat.open": "Mining",
       "mint.stat.supply": "Mined (unlimited)",
       "mint.stat.ends": "Mining ends",
@@ -209,7 +209,7 @@
       "slot.item": "物品",
       "slot.stamp": "印章",
 
-      "hero.p": "在 BNB Chain 上以工作量证明（keccak）挖出的霓虹机器人。每个钱包第一个 <b>0.50 USDT</b>，之后每个 <b>1.00 USDT</b> —— 价格直接读自合约。供应不限量；铸造自部署起仅开放 <b>7 天</b>。每次铸造收益 <b>75% 归持有者</b>、<b>25% 归部署者</b>。",
+      "hero.p": "在 BNB Chain 上以工作量证明（keccak）挖出的霓虹机器人。每个钱包第一个 <b>0.50 USDT</b>，之后每个 <b>1.00 USDT</b> —— 价格直接读自合约。供应不限量；铸造自部署起仅开放 <b>7 天</b>。每次铸造收益 <b>75% 归持有者</b>、<b>25% 归入国库</b>。",
       "hero.cta": "开始挖矿",
       "hero.gallery": "查看画廊",
       "pending": "<b>合约尚未部署。</b> <span class=\"mono\">js/config.js</span> 中的 <span class=\"mono\">NNB</span> / <span class=\"mono\">ART</span> 地址仍为空 —— 下面的数字要等部署后才会出现。本站从不显示非链上来源的数字。",
@@ -225,7 +225,7 @@
       "how.3": "先按总额精确授权 USDT（两步），再调用 <span class=\"mono\">mine(nonce, count)</span>。",
       "how.4": "工作量证明一次性使用：一次找到 = 一批（每笔最多 100）。",
       "money.title": "铸造收益",
-      "money.p1": "每次铸造收益 <b>75% 归入持有者池</b>（按持仓比例记入、可随时领取），<b>25% 归部署者</b>。",
+      "money.p1": "每次铸造收益 <b>75% 归入持有者池</b>（按持仓比例记入、可随时领取），<b>25% 归入国库</b>。",
       "money.p2": "供应不限量，只受时间限制：铸造在部署后 <b>7 天</b>自动关闭（<span class=\"mono\">MINING_END</span>）—— 没有延期函数。",
       "contracts.title": "合约",
       "contracts.nnb": "系列合约（NNB）",
@@ -247,7 +247,7 @@
       "note.readFail": "读取 saleFacts 失败",
 
       "mint.h1": "挖一个机器人",
-      "mint.sub": "下方报价是你自己的 <span class=\"mono\">priceFor(wallet, n)</span> —— 首个档位 <b>0.50 USDT</b>，之后一律 <b>1.00 USDT</b>，钱包数量不限（每笔 PoW 交易最多 100 个）。每次铸造收益 <b>75% 进入持有者池</b>、<b>25% 归部署者</b>；供应不限量，铸造在部署后 7 天关闭。",
+      "mint.sub": "下方报价是你自己的 <span class=\"mono\">priceFor(wallet, n)</span> —— 首个档位 <b>0.50 USDT</b>，之后一律 <b>1.00 USDT</b>，钱包数量不限（每笔 PoW 交易最多 100 个）。每次铸造收益 <b>75% 进入持有者池</b>、<b>25% 归入国库</b>；供应不限量，铸造在部署后 7 天关闭。",
       "mint.stat.open": "挖矿状态",
       "mint.stat.supply": "已挖（不限量）",
       "mint.stat.ends": "挖矿截止",
