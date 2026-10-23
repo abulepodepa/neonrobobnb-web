@@ -66,6 +66,8 @@
     if (raw.includes("MiningClosed")) return T("err.paused");
     if (raw.includes("BatchTooLarge")) return T("err.batch");
     if (raw.includes("PaymentFailed")) return T("err.payment");
+    if (raw.includes("NothingToClaim")) return T("err.claim");
+    if (raw.includes("NotTokenOwner")) return T("err.notowned");
     if (raw.includes("user rejected") || raw.includes("ACTION_REJECTED")) return T("err.rejected");
     if (raw.includes("insufficient funds")) return T("err.insufficient");
     if (raw === "no-wallet") return T("err.nowallet");

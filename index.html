@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>NeonRoboBNB — proof-of-work collection on BNB Chain</title>
-  <meta name="description" content="10,000 neon robotos mined under a keccak target on BNB Chain. First unit 0.50 USDT per wallet, every unit after that 1.00 USDT — quoted from the contract, proceeds straight to the deployer." />
+  <meta name="description" content="Neon robotos mined under a keccak target on BNB Chain. First unit 0.50 USDT per wallet, every unit after that 1.00 USDT — quoted from the contract. Unlimited supply, minting open for 7 days; every mint splits 75% to holders and 25% to the deployer." />
   <link rel="stylesheet" href="css/style.css" />
   <style>
     .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
@@ -37,7 +37,7 @@
 <div class="wrap">
   <div class="hero">
     <h1>NEONROBOBNB</h1>
-    <p data-i18n="hero.p">10,000 neon robotos mined with proof-of-work (keccak) on BNB Chain. First unit per wallet <b>0.50 USDT</b>, every unit after <b>1.00 USDT</b> — quoted straight from the contract, no quantity limit.</p>
+    <p data-i18n="hero.p">Neon robotos mined with proof-of-work (keccak) on BNB Chain. First unit per wallet <b>0.50 USDT</b>, every unit after <b>1.00 USDT</b> — quoted straight from the contract. Supply is unlimited; minting stays open for exactly <b>7 days</b> from deployment. Every mint splits <b>75% to holders</b> and <b>25% to the deployer</b>.</p>
     <a class="btn cta" href="mint.html" data-i18n="hero.cta">Start mining</a>
     <a class="btn" href="#gallery" data-i18n="hero.gallery">View gallery</a>
     <div style="margin-top:26px"><img src="img/hero.png" alt="NeonRoboBNB hero" width="300" style="border-radius:14px;border:1px solid var(--line)" /></div>
@@ -46,7 +46,7 @@
   <div id="pending" class="panel gold" style="display:none" data-i18n="pending"></div>
 
   <div class="row" style="gap:12px; margin-bottom:6px">
-    <div class="stat" style="flex:1"><div class="k" data-i18n="stat.mined">Mined / supply</div><div class="v" id="s-supply">—</div></div>
+    <div class="stat" style="flex:1"><div class="k" data-i18n="stat.mined">Mined (unlimited)</div><div class="v" id="s-supply">—</div></div>
     <div class="stat" style="flex:1"><div class="k" data-i18n="stat.first">First-unit price</div><div class="v gold" id="s-first">—</div></div>
     <div class="stat" style="flex:1"><div class="k" data-i18n="stat.next">Price after that</div><div class="v gold" id="s-list">—</div></div>
     <div class="stat" style="flex:1"><div class="k" data-i18n="stat.mining">Mining</div><div class="v" id="s-open">—</div></div>
@@ -68,8 +68,8 @@
     </div>
     <div class="panel gold">
       <h2 style="margin-top:0" data-i18n="money.title">Mint proceeds</h2>
-      <p class="tiny muted" style="margin:0 0 8px" data-i18n="money.p1">Mint proceeds go <b>straight to the deployer's wallet</b> inside the same transaction — the contract never holds sale funds.</p>
-      <p class="tiny muted" style="margin:0" data-i18n="money.p2">Supply 10,000, closed by <span class="mono">CONTRACT_CEILING</span> in the bytecode — no one can raise it, not even the deployer.</p>
+      <p class="tiny muted" style="margin:0 0 8px" data-i18n="money.p1">Every mint is split <b>75% to the holder pool</b> (credited per token held, claimable any time) and <b>25% to the deployer</b>.</p>
+      <p class="tiny muted" style="margin:0" data-i18n="money.p2">Supply is unlimited, bound only by time: minting closes automatically <b>7 days</b> after deployment (<span class="mono">MINING_END</span>) — there is no extend function.</p>
     </div>
   </div>
 
@@ -146,7 +146,7 @@
     if (!deployed) return;
     try {
       const s = await Temple.readSaleState();
-      $("s-supply").textContent = s.supply.toLocaleString("en-US") + " / " + s.maxSupply.toLocaleString("en-US");
+      $("s-supply").textContent = s.supply.toLocaleString("en-US") + " · " + T("mint.unlimited");
       $("s-first").textContent = UI.usdt(s.firstPrice, 2) + " USDT";
       $("s-list").textContent = UI.usdt(s.listPrice, 2) + " USDT";
       $("s-open").textContent = s.open ? T("meta.open") : T("meta.closed");

@@ -76,22 +76,23 @@
     if (!deployed()) return { pending: true };
     return withRpc(async (p) => {
       const inN = ifaceN();
-      const [facts, anchor, target, held] = await multicall([
+      const [facts, anchor, target, held, start] = await multicall([
         { addr: C.NNB, iface: inN, fn: "saleFacts" },
         { addr: C.NNB, iface: inN, fn: "launchAnchor" },
         { addr: C.NNB, iface: inN, fn: "targetDifficulty" },
         { addr: C.NNB, iface: inN, fn: "saleConfig" },
+        { addr: C.NNB, iface: inN, fn: "MINING_START" },
       ]);
       return {
         pending: false,
         supply: Number(facts[0]),
-        maxSupply: Number(facts[1]),
-        ceiling: Number(facts[2]),
-        minted: Number(facts[3]),
-        firstPrice: facts[4],
-        listPrice: facts[5],
-        paymentToken: facts[6],
-        open: facts[7],
+        minted: Number(facts[1]),
+        firstPrice: facts[2],
+        listPrice: facts[3],
+        paymentToken: facts[4],
+        open: facts[5],
+        miningEnd: Number(facts[6]),
+        miningStart: Number(start),
         anchor,
         target,
         contractHeld: held[3],
@@ -125,7 +126,7 @@
         { addr: C.NNB, iface: inN, fn: "isOpen" },
         { addr: C.NNB, iface: inN, fn: "saleFacts" },
       ]);
-      return { pending: false, open, minted: Number(facts[3]), max: Number(facts[1]) };
+      return { pending: false, open, minted: Number(facts[1]) };
     });
   }
 

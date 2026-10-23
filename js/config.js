@@ -14,7 +14,7 @@ const CONFIG = {
   MULTICALL3: "0xcA11bde05977b3631167028862bE2a173976CA11",
 
   /* filled by the deploy step */
-  NNB: "0xCE178ec28769316ecD9b4851Debbd83421bB81B9",   /* NeonroboBNB collection — deployed on BSC */
+  NNB: "0x9FC4C2927C78F1f9FcF920458A1C7BAa01a56C1C",   /* NeonroboBNB — unlimited supply, 7-day window, 75/25 split */
   ART: "0xd1da84b085228BBc928d93634bfF64a7DF1C0f92",   /* NeonroboBNBArt library (linked first; preview calls go here) */
   MARKET: null, /* order book contract — not part of this deploy yet */
 
@@ -29,8 +29,6 @@ const CONFIG = {
       "function symbol() view returns (string)",
       "function totalSupply() view returns (uint256)",
       "function minedCount() view returns (uint256)",
-      "function MAX_SUPPLY() view returns (uint256)",
-      "function CONTRACT_CEILING() view returns (uint256)",
       "function FIRST_PRICE() view returns (uint256)",
       "function LIST_PRICE() view returns (uint256)",
       "function PAYMENT_TOKEN() view returns (address)",
@@ -40,7 +38,17 @@ const CONFIG = {
       "function usedProof(bytes32 hash) view returns (bool)",
       "function priceFor(address wallet, uint256 count) view returns (uint256)",
       "function consumedFirstMint(address wallet) view returns (bool)",
-      "function saleFacts() view returns (uint256 supply, uint256 maxSupply, uint256 contractCeiling, uint256 minted, uint256 firstPrice, uint256 listPrice, address paymentToken, bool open)",
+      "function pendingYield(uint256 tokenId) view returns (uint256)",
+      "function pendingOf(uint256[] tokenIds) view returns (uint256)",
+      "function claimYield(uint256[] tokenIds)",
+      "function claimAll()",
+      "function yieldPaidTotal() view returns (uint256)",
+      "function HOLDER_SHARE_BPS() view returns (uint256)",
+      "function DEPLOYER_SHARE_BPS() view returns (uint256)",
+      "function saleFacts() view returns (uint256 supply, uint256 minted, uint256 firstPrice, uint256 listPrice, address paymentToken, bool open, uint256 miningEnd)",
+      "function MINING_WINDOW() view returns (uint256)",
+      "function MINING_START() view returns (uint256)",
+      "function MINING_END() view returns (uint256)",
       "function saleConfig() view returns (address paymentToken, uint256 firstPrice, uint256 listPrice, uint256 contractHeld)",
       "function computeHash(address miner, uint256 nonce, bytes32 anchor) pure returns (bytes32)",
       "function mine(uint256 nonce, uint256 count)",
@@ -52,11 +60,11 @@ const CONFIG = {
       "function ownerOf(uint256 tokenId) view returns (address)",
       "function balanceOf(address holder) view returns (uint256)",
       "event NeonMined(address indexed miner, uint256 indexed tokenId, uint256 seed, uint256 paid, uint8 depth, bytes32 workHash)",
+      "event YieldClaimed(address indexed holder, uint256 indexed tokenId, uint256 amount)",
       "event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)",
       /* every custom error must sit in the interface or ethers cannot name it */
       "error BatchTooLarge()",
       "error WorkOverTarget()",
-      "error SupplyExhausted()",
       "error MiningClosed()",
       "error ProofAlreadyUsed()",
       "error PaymentFailed()",
@@ -66,6 +74,8 @@ const CONFIG = {
       "error InvalidConstructor()",
       "error ZeroAddress()",
       "error UnsafeRecipient()",
+      "error NothingToClaim()",
+      "error BadTokenRange()",
     ],
     ART: [
       "function traitsOf(uint256 seed) pure returns (string[9] parts, uint8 tier)",

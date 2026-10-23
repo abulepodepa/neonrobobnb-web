@@ -25,13 +25,14 @@
 
 <div class="wrap">
   <h1 data-i18n="mint.h1">Mine a robo</h1>
-  <p class="sub" data-i18n="mint.sub">The quote below is your own <span class="mono">priceFor(wallet, n)</span> — first tier <b>0.50 USDT</b>, then a flat <b>1.00 USDT</b>, with no wallet quantity limit (max 100 units per PoW transaction). Proceeds go straight to the deployer's wallet in the same transaction.</p>
+  <p class="sub" data-i18n="mint.sub">The quote below is your own <span class="mono">priceFor(wallet, n)</span> — first tier <b>0.50 USDT</b>, then a flat <b>1.00 USDT</b>, with no wallet quantity limit (max 100 units per PoW transaction). Every mint splits <b>75% to the holder pool</b> and <b>25% to the deployer</b>; supply is unlimited and mining closes 7 days after deployment.</p>
 
   <div id="pending" class="panel gold" style="display:none" data-i18n="pending"></div>
 
   <div class="row" style="gap:12px; margin-bottom:16px">
     <div class="stat" style="flex:1"><div class="k" data-i18n="mint.stat.open">Mining</div><div class="v" id="g-open">—</div></div>
-    <div class="stat" style="flex:1"><div class="k" data-i18n="mint.stat.supply">Mined / supply</div><div class="v" id="g-supply">—</div></div>
+    <div class="stat" style="flex:1"><div class="k" data-i18n="mint.stat.supply">Mined (unlimited)</div><div class="v" id="g-supply">—</div></div>
+    <div class="stat" style="flex:1"><div class="k" data-i18n="mint.stat.ends">Mining ends</div><div class="v" id="g-end">—</div></div>
     <div class="stat" style="flex:1"><div class="k" data-i18n="mint.stat.target">Target</div><div class="v" id="g-bits">—</div></div>
     <div class="stat" style="flex:1"><div class="k" data-i18n="mint.stat.tier">Your first tier</div><div class="v gold" id="g-tier">—</div></div>
   </div>
@@ -83,6 +84,20 @@
         <div id="mine-ids" class="tiny mono" style="margin-top:8px"></div>
       </div>
 
+      <div class="panel gold">
+        <h2 style="margin-top:0" data-i18n="claim.h">Holder yield</h2>
+        <p class="tiny muted" data-i18n="claim.note">75% of every mint's proceeds accrue to the holder pool, credited per token held at each mint. Your tokens earn from every mint after them — claim any time, nothing is locked.</p>
+        <div class="row between" style="margin-top:10px">
+          <div>
+            <div class="tiny muted" data-i18n="claim.pending">Pending for your tokens</div>
+            <div class="mono" style="font-size:19px; color:var(--gold)"><span id="claim-amt">—</span> USDT</div>
+          </div>
+          <button id="claim-go" data-i18n="claim.go">Claim</button>
+        </div>
+        <p class="tiny muted" id="claim-state" style="margin:8px 0 0" data-i18n="claim.scanHint">Scan your tokens to see what they have earned.</p>
+        <p class="tiny" id="claim-err" style="color:var(--bad); margin:8px 0 0"></p>
+      </div>
+
       <div class="panel">
         <h2 style="margin-top:0" data-i18n="mint.rules">Rules (from the contract)</h2>
         <table><tbody>
@@ -109,6 +124,7 @@
   let state = null;
   let worker = null;
   let found = null;
+  let myIds = null;
   let startedAt = 0, hashes = 0;
 
   async function load() {
@@ -119,7 +135,8 @@
       state = await Temple.readSaleState();
       $("g-open").textContent = state.open ? T("meta.open") : T("meta.closed");
       $("g-open").style.color = state.open ? "var(--ok)" : "var(--bad)";
-      $("g-supply").textContent = state.supply.toLocaleString("en-US") + " / " + state.maxSupply.toLocaleString("en-US");
+      $("g-supply").textContent = state.supply.toLocaleString("en-US") + " · " + T("mint.unlimited");
+      $("g-end").textContent = fmtEnd(state.miningEnd);
       const bits = state.target > 0n ? 256 - state.target.toString(2).length : 0;
       $("g-bits").textContent = bits + " bit";
       $("r-first").textContent = UI.usdt(state.firstPrice, 2) + " USDT";
@@ -159,6 +176,11 @@
   }
 
   function stat(txt) { $("mine-stat").textContent = txt; }
+
+  function fmtEnd(t) {
+    if (!t) return "—";
+    return new Date(t * 1000).toISOString().replace("T", " ").slice(0, 16) + " UTC";
+  }
 
   function startMine() {
     if (!UI.address) { UI.toast(T("mint.err.connect"), true); return; }
@@ -221,6 +243,7 @@
       await verify(r.receipt, a, total);
       st.textContent = "";
       found = null; $("mine-hash").textContent = ""; stat(T("mint.idle"));
+      myIds = null; refreshClaim();
       load(); quote();
     } catch (e) { UI.toast(UI.errText(e), true); $("mint-state").textContent = ""; }
   });
@@ -257,14 +280,72 @@
       });
       note.textContent = T("mint.scanDone") + r.ids.length + T("mint.foundN");
       $("mine-ids").textContent = r.ids.length ? T("mint.mineList") + r.ids.join(", #") : T("mint.mineNone");
+      myIds = r.ids;
+      refreshClaim();
     } catch (e) { UI.toast(UI.errText(e), true); }
   });
 
-  window.__retranslate = [() => { load(); if (UI.address) quote(); }];
+  /* ---- holder yield (75% pool): scan -> pendingOf -> claimYield ---- */
+  async function refreshClaim() {
+    const amt = $("claim-amt");
+    if (!amt) return;
+    if (!UI.address || myIds == null) {
+      amt.textContent = "—";
+      $("claim-state").textContent = T("claim.scanHint");
+      return;
+    }
+    try {
+      const c = Temple.contract(C.NNB, C.ABI.NNB);
+      const owed = myIds.length ? await c.pendingOf(myIds) : 0n;
+      amt.textContent = UI.usdt(owed, 4);
+      $("claim-state").textContent = "";
+      $("claim-go").disabled = owed <= 0n;
+    } catch (e) { $("claim-err").textContent = UI.errText(e); }
+  }
+
+  async function scanForClaim() {
+    const a = await UI.ensureWallet();
+    const r = await Temple.readOwnedTokens(a, (done, total) => {
+      $("scan-note").textContent = T("mint.scanning") + done + "/" + total + "…";
+    });
+    myIds = r.ids;
+    $("mine-ids").textContent = myIds.length ? T("mint.mineList") + myIds.join(", #") : T("mint.mineNone");
+    await refreshClaim();
+  }
+
+  $("claim-go").addEventListener("click", async () => {
+    const st = $("claim-state");
+    try {
+      await UI.ensureWallet();
+      if (myIds == null) await scanForClaim();
+      if (!myIds.length) return UI.toast(T("claim.none"));
+      const c = Temple.contract(C.NNB, C.ABI.NNB);
+      const owed = await c.pendingOf(myIds);
+      if (owed <= 0n) return UI.toast(T("claim.none"));
+      st.textContent = T("claim.ids") + myIds.join(", #") + "…";
+      const r = await Temple.write({ addr: C.NNB, abi: C.ABI.NNB, method: "claimYield", args: [myIds] });
+      // Pay-out is proven from the receipt's YieldClaimed logs, not from a preview.
+      const iface = new (Temple.E.Interface)(C.ABI.NNB);
+      let paid = 0n;
+      for (const lg of r.receipt.logs) {
+        if (lg.address.toLowerCase() !== C.NNB.toLowerCase()) continue;
+        try {
+          const p = iface.parseLog(lg);
+          if (p && p.name === "YieldClaimed") paid += p.args.amount;
+        } catch (e) { /* other logs */ }
+      }
+      st.textContent = "";
+      UI.toast(T("claim.sent") + UI.usdt(paid, 4) + " USDT");
+      await refreshClaim();
+    } catch (e) { st.textContent = ""; UI.toast(UI.errText(e), true); }
+  });
+
+  window.__retranslate = [() => { load(); refreshClaim(); if (UI.address) quote(); }];
 
   UI.onReady(async () => {
     fillQty(1);
     await load();
+    refreshClaim();
     $("mine-go").addEventListener("click", startMine);
     $("mine-stop").addEventListener("click", () => stopMine(false));
     $("qty").addEventListener("change", quote);
