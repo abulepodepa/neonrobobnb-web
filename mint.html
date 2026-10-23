@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mint · NeonRoboBNB</title>
+  <meta name="description" content="Mine NeonRoboBNB on BNB Chain: find a keccak nonce in your browser, pay the contract's own per-wallet quote in USDT — 0.50 first unit, 1.00 after." />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <div class="brand">NEONROBOBNB<small>Proof-of-work · BNB Chain</small></div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="mint.html" class="on">Mint</a>
+      <a href="market.html">NFT market</a>
+    </nav>
+    <div class="spacer"></div>
+    <button id="connect">Connect wallet</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <h1>Mine a robo</h1>
+  <p class="sub">Kutipan di bawah adalah <span class="mono">priceFor(wallet, n)</span> milikmu sendiri —
+     tier pertama <b>0,50 USDT</b>, sisanya <b>1,00 USDT</b> datar, tanpa batas jumlah per wallet
+     (maksimal 100 unit per transaksi PoW). Hasil mint masuk langsung ke wallet deployer di transaksi yang sama.</p>
+
+  <div id="pending" class="panel gold" style="display:none">
+    <b>Kontrak belum terpasang.</b> Isi <span class="mono">NNB</span> di
+    <span class="mono">js/config.js</span> setelah deploy — halaman ini tidak
+    akan menampilkan angka apa pun sebelum itu.
+  </div>
+
+  <div class="row" style="gap:12px; margin-bottom:16px">
+    <div class="stat" style="flex:1"><div class="k">Mining</div><div class="v" id="g-open">—</div></div>
+    <div class="stat" style="flex:1"><div class="k">Mined / supply</div><div class="v" id="g-supply">—</div></div>
+    <div class="stat" style="flex:1"><div class="k">Target</div><div class="v" id="g-bits">—</div></div>
+    <div class="stat" style="flex:1"><div class="k">Tier pertamamu</div><div class="v gold" id="g-tier">—</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel gold">
+      <h2 style="margin-top:0">1 · Cari nonce (PoW)</h2>
+      <p class="tiny muted">Worker di browser menghitung <span class="mono">keccak256(address‖nonce‖anchor)</span>
+         sampai ≤ target. Bisa memakan waktu beberapa detik; jangan tutup tab selama berjalan.</p>
+      <div class="row" style="gap:10px">
+        <button id="mine-go" class="primary">Mulai mencari nonce</button>
+        <button id="mine-stop" disabled>Berhenti</button>
+      </div>
+      <div class="mono tiny" id="mine-stat" style="margin-top:10px">idle</div>
+      <div class="mono tiny muted" id="mine-hash" style="word-break:break-all"></div>
+
+      <hr class="sep" />
+      <h2 style="margin-top:0">2 · Bayar & mint</h2>
+      <label>Jumlah unit</label>
+      <div class="row" style="gap:8px">
+        <select id="qty" style="max-width:110px"></select>
+        <span class="tiny muted" id="qty-note"></span>
+      </div>
+      <div class="row between" style="margin-top:14px">
+        <div>
+          <div class="tiny muted">Total (dikutip kontrak, per wallet)</div>
+          <div class="mono" style="font-size:19px; color:var(--gold)"><span id="cost">…</span> USDT</div>
+        </div>
+        <button id="go-mint">Approve & mint</button>
+      </div>
+      <p class="tiny muted" id="mint-state" style="margin:8px 0 0"></p>
+      <p class="tiny" id="mint-err" style="color:var(--bad); margin:8px 0 0"></p>
+    </div>
+
+    <div>
+      <div class="panel">
+        <h2 style="margin-top:0">Verifikasi setelah mint</h2>
+        <ol class="tiny muted" style="margin:0; padding-left:18px; line-height:1.7">
+          <li>Receipt <span class="mono">status = 0x1</span>.</li>
+          <li>Hitung event <span class="mono">NeonMined</span> milikmu — id asli dari situ, bukan preview.</li>
+          <li><span class="mono">ownerOf(id)</span> = kamu; USDT berkurang tepat kutipan.</li>
+        </ol>
+        <div id="verify-out" class="tiny mono" style="margin-top:10px"></div>
+      </div>
+
+      <div class="panel">
+        <h2 style="margin-top:0">Relic milikmu</h2>
+        <button id="scan">Pindai token milik wallet</button>
+        <p class="tiny muted" id="scan-note" style="margin:8px 0 0">Koleksi tidak enumerable — pemindaian membaca <span class="mono">ownerOf(1..supply)</span> lewat multicall.</p>
+        <div id="mine-ids" class="tiny mono" style="margin-top:8px"></div>
+      </div>
+
+      <div class="panel">
+        <h2 style="margin-top:0">Aturan (dari kontrak)</h2>
+        <table><tbody>
+          <tr><td class="txt">Unit pertama per wallet</td><td id="r-first">—</td></tr>
+          <tr><td class="txt">Unit berikutnya</td><td id="r-list">—</td></tr>
+          <tr><td class="txt">Batas per transaksi</td><td>100 (MAX_PER_TX, PoW)</td></tr>
+          <tr><td class="txt">Batas per wallet</td><td>Tidak ada (no limit)</td></tr>
+          <tr><td class="txt">Dana</td><td>Langsung ke deployer · kontrak held = 0</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="js/vendor/ethers.umd.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/chain.js"></script>
+<script src="js/app.js"></script>
+<script>
+(async () => {
+  const C = CONFIG, UI = TempleUI, $ = UI.$;
+  let state = null;         // sale state (anchor, target, prices, open)
+  let worker = null;
+  let found = null;         // {nonce, hash}
+  let startedAt = 0, hashes = 0;
+
+  /* ---------- status ---------- */
+  async function load() {
+    const ok = Temple.deployed();
+    $("pending").style.display = ok ? "none" : "block";
+    if (!ok) return;
+    try {
+      state = await Temple.readSaleState();
+      $("g-open").textContent = state.open ? "OPEN" : "CLOSED";
+      $("g-open").style.color = state.open ? "var(--ok)" : "var(--bad)";
+      $("g-supply").textContent = state.supply.toLocaleString("en-US") + " / " + state.maxSupply.toLocaleString("en-US");
+      const bits = state.target > 0n ? 256 - state.target.toString(2).length : 0;
+      $("g-bits").textContent = bits + " bit";
+      $("r-first").textContent = UI.usdt(state.firstPrice, 2) + " USDT";
+      $("r-list").textContent = UI.usdt(state.listPrice, 2) + " USDT";
+      if (UI.address) {
+        const spent = await Temple.contract(C.NNB, C.ABI.NNB).consumedFirstMint(UI.address);
+        $("g-tier").textContent = spent ? "Sudah terpakai (1,00 USDT)" : "Aktif (0,50 USDT)";
+      }
+    } catch (e) { UI.toast("Gagal baca status: " + UI.errText(e), true); }
+  }
+
+  /* ---------- quote ---------- */
+  function fillQty(n) {
+    const sel = $("qty"); sel.innerHTML = "";
+    for (let i = 1; i <= 100; i++) {
+      const o = document.createElement("option");
+      o.value = i; o.textContent = i; sel.appendChild(o);
+    }
+    if (n) sel.value = String(Math.min(n, 100));
+  }
+
+  async function quote() {
+    if (!state || !UI.address) return;
+    try {
+      const q = await Temple.readQuote(UI.address, parseInt($("qty").value || "1", 10));
+      $("cost").textContent = UI.usdt(q.price, 4);
+      const enough = q.balance >= q.price;
+      const allowed = q.allowance >= q.price;
+      $("qty-note").textContent =
+        (q.firstTierSpent ? "tier list aktif · " : "tier pertama masih berlaku · ") +
+        "saldo " + UI.usdt(q.balance, 2) + " USDT" + (allowed ? " · sudah di-approve" : "");
+      $("go-mint").disabled = !(found && enough);
+      if (!found) $("mint-state").textContent = "Cari nonce dulu (langkah 1).";
+      else if (!enough) $("mint-state").textContent = "USDT tidak cukup untuk kutipan ini.";
+      else $("mint-state").textContent = allowed ? "Siap: nonce + dana + approve OK." : "Siap — akan approve tepat total dulu.";
+      state._q = q;
+    } catch (e) { $("mint-err").textContent = UI.errText(e); }
+  }
+
+  /* ---------- miner ---------- */
+  function stat(txt) { $("mine-stat").textContent = txt; }
+
+  function startMine() {
+    if (!UI.address) { UI.toast("Connect wallet dulu — nonce terikat alamatmu.", true); return; }
+    if (!state) return;
+    stopMine(true);
+    found = null; hashes = 0; startedAt = Date.now();
+    worker = new Worker("js/miner.js");
+    worker.onmessage = (e) => {
+      const d = e.data;
+      if (d.found) {
+        found = { nonce: d.nonce, hash: d.hash };
+        $("mine-hash").textContent = "hash: " + d.hash;
+        stat("DITEMUKAN nonce " + d.nonce + " · " + hrate());
+        $("mine-go").disabled = false; $("mine-stop").disabled = true;
+        stopWorker();
+        quote();
+      } else if (d.progress) {
+        hashes += d.hashes;
+        stat("mencari… nonce ke-" + d.progress + " · " + hrate());
+      }
+    };
+    worker.postMessage({ cmd: "start", addr: UI.address, anchor: state.anchor, target: state.target.toString() });
+    $("mine-go").disabled = true; $("mine-stop").disabled = false;
+    stat("berjalan…");
+  }
+  function hrate() {
+    const s = (Date.now() - startedAt) / 1000;
+    return s > 0 ? (hashes / s).toFixed(0) + " H/s" : "";
+  }
+  function stopWorker() { if (worker) { worker.postMessage({ cmd: "stop" }); worker = null; } }
+  function stopMine(quiet) {
+    stopWorker();
+    $("mine-go").disabled = false; $("mine-stop").disabled = true;
+    if (!quiet) stat(found ? "berhenti (nonce tersimpan)" : "berhenti");
+  }
+
+  /* ---------- approve + mine ---------- */
+  $("go-mint").addEventListener("click", async () => {
+    try {
+      const a = await UI.ensureWallet();
+      const n = parseInt($("qty").value || "1", 10);
+      if (!found) return UI.toast("Nonce belum ditemukan.", true);
+      const st = $("mint-state");
+      // Re-quote immediately before acting — never trust the painted number.
+      const q = await Temple.readQuote(a, n);
+      const total = q.price;
+      if (q.balance < total) return UI.toast("USDT kurang: butuh " + UI.usdt(total, 4), true);
+      // chain sanity: still open + proof unspent
+      const pre = await Temple.preflight();
+      if (!pre.open) return UI.toast("Mining sudah ditutup.", true);
+      const hashBytes = found.hash;
+      if (await Temple.proofUsed(hashBytes)) {
+        found = null; $("mine-hash").textContent = "";
+        return UI.toast("Nonce sudah terpakai — cari lagi.", true, 8000);
+      }
+      if (q.allowance < total) {
+        st.textContent = "Step 1/2 — approve tepat " + UI.usdt(total, 4) + " USDT…";
+        await Temple.write({ addr: C.USDT, abi: C.ABI.USDT, method: "approve", args: [C.NNB, total] });
+        UI.toast("Approval terkonfirmasi.");
+      }
+      st.textContent = "Step 2/2 — mine(" + found.nonce + ", " + n + ")…";
+      const r = await Temple.write({ addr: C.NNB, abi: C.ABI.NNB, method: "mine", args: [found.nonce, n] });
+      await verify(r.receipt, a, total);
+      st.textContent = "";
+      found = null; $("mine-hash").textContent = ""; stat("selesai — nonce terpakai");
+      load(); quote();
+    } catch (e) { UI.toast(UI.errText(e), true); $("mint-state").textContent = ""; }
+  });
+
+  async function verify(receipt, who, paid) {
+    const out = $("verify-out");
+    const iface = new (Temple.E.Interface)(C.ABI.NNB);
+    const mined = [], transfers = [];
+    for (const lg of receipt.logs) {
+      if (lg.address.toLowerCase() !== C.NNB.toLowerCase()) continue;
+      try {
+        const p = iface.parseLog(lg);
+        if (!p) continue;
+        if (p.name === "NeonMined") mined.push(Number(p.args.tokenId));
+        if (p.name === "Transfer" && p.args.from === Temple.E.ZeroHash) transfers.push(Number(p.args.tokenId));
+      } catch (e) { /* log lain */ }
+    }
+    let bal = "?";
+    try { bal = String(await Temple.contract(C.NNB, C.ABI.NNB).balanceOf(who)); } catch (e) {}
+    out.innerHTML = "tx " + UI.short(receipt.hash) + " · status 0x1<br>" +
+      "NeonMined ids: <b>#" + mined.join(", #") + "</b><br>" +
+      "Transfer from 0x0: #" + transfers.join(", #") + " · balanceOf: " + bal +
+      " · USDT dibayar: " + UI.usdt(paid, 4);
+    if (mined.length === 0) UI.toast("PERHATIAN: tidak ada NeonMined di receipt — jangan anggap sukses.", true, 20000);
+    else UI.toast("Mint sukses ✓ #" + mined.join(", #"));
+  }
+
+  /* ---------- my tokens ---------- */
+  $("scan").addEventListener("click", async () => {
+    try {
+      const a = await UI.ensureWallet();
+      const note = $("scan-note");
+      const r = await Temple.readOwnedTokens(a, (done, total) => {
+        note.textContent = "memindai " + done + "/" + total + "…";
+      });
+      note.textContent = "Selesai — membaca ownerOf 1.." + r.ids.length + " ditemukan.";
+      $("mine-ids").textContent = r.ids.length ? "milikmu: #" + r.ids.join(", #") : "tidak ada token atas namamu";
+    } catch (e) { UI.toast(UI.errText(e), true); }
+  });
+
+  UI.onReady(async () => {
+    fillQty(1);
+    await load();
+    $("mine-go").addEventListener("click", startMine);
+    $("mine-stop").addEventListener("click", () => stopMine(false));
+    $("qty").addEventListener("change", quote);
+    setInterval(() => { if (UI.address) quote(); }, 15000);
+    $("connect").addEventListener("click", () => setTimeout(quote, 400));
+    setInterval(load, 30000);
+  });
+})();
+</script>
+</body>
+</html>

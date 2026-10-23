@@ -1,0 +1,182 @@
+[
+ {
+  "file": "tile-00.png",
+  "tier": 1,
+  "labels": [
+   "Body: Chamfer",
+   "Hat: Bare",
+   "Eyes: Shut",
+   "Beard: Beard",
+   "Chest: Square",
+   "Arms: Raised",
+   "Legs: Block",
+   "Item: Key",
+   "Stamp: None"
+  ]
+ },
+ {
+  "file": "tile-01.png",
+  "tier": 1,
+  "labels": [
+   "Body: Tall",
+   "Hat: Bare",
+   "Eyes: Cyclops",
+   "Beard: Beard+Line",
+   "Chest: None",
+   "Arms: Blocks",
+   "Legs: Standard",
+   "Item: None",
+   "Stamp: None"
+  ]
+ },
+ {
+  "file": "tile-02.png",
+  "tier": 2,
+  "labels": [
+   "Body: Wide",
+   "Hat: Antenna",
+   "Eyes: Wide",
+   "Beard: Grill",
+   "Chest: None",
+   "Arms: Fists",
+   "Legs: Standard",
+   "Item: Bottle",
+   "Stamp: None"
+  ]
+ },
+ {
+  "file": "tile-03.png",
+  "tier": 1,
+  "labels": [
+   "Body: Taper",
+   "Hat: Beanie",
+   "Eyes: Shut",
+   "Beard: Fork",
+   "Chest: Square",
+   "Arms: None",
+   "Legs: Standard",
+   "Item: Bottle",
+   "Stamp: None"
+  ]
+ },
+ {
+  "file": "tile-04.png",
+  "tier": 1,
+  "labels": [
+   "Body: Blocky",
+   "Hat: Beanie",
+   "Eyes: Offset",
+   "Beard: Beard",
+   "Chest: Cross",
+   "Arms: None",
+   "Legs: Short",
+   "Item: None",
+   "Stamp: None"
+  ]
+ },
+ {
+  "file": "tile-05.png",
+  "tier": 1,
+  "labels": [
+   "Body: Wide",
+   "Hat: Trim Cap",
+   "Eyes: Cross",
+   "Beard: Line",
+   "Chest: None",
+   "Arms: Raised",
+   "Legs: Standard",
+   "Item: Bottle",
+   "Stamp: None"
+  ]
+ },
+ {
+  "file": "tile-06.png",
+  "tier": 0,
+  "labels": [
+   "Body: Blocky",
+   "Hat: Mohawk",
+   "Eyes: Duo",
+   "Beard: None",
+   "Chest: Wide",
+   "Arms: None",
+   "Legs: Standard",
+   "Item: None",
+   "Stamp: None"
+  ]
+ },
+ {
+  "file": "tile-07.png",
+  "tier": 0,
+  "labels": [
+   "Body: Tall",
+   "Hat: Bare",
+   "Eyes: Wide",
+   "Beard: Beard",
+   "Chest: Square",
+   "Arms: Blocks",
+   "Legs: Standard",
+   "Item: None",
+   "Stamp: None"
+  ]
+ },
+ {
+  "file": "tile-08.png",
+  "tier": 0,
+  "labels": [
+   "Body: Blocky",
+   "Hat: Trim Cap",
+   "Eyes: Angry",
+   "Beard: None",
+   "Chest: Square",
+   "Arms: Blocks",
+   "Legs: Wide",
+   "Item: None",
+   "Stamp: None"
+  ]
+ },
+ {
+  "file": "tile-09.png",
+  "tier": 0,
+  "labels": [
+   "Body: Tall",
+   "Hat: Mohawk",
+   "Eyes: Angry",
+   "Beard: None",
+   "Chest: Square",
+   "Arms: None",
+   "Legs: Short",
+   "Item: None",
+   "Stamp: None"
+  ]
+ },
+ {
+  "file": "tile-10.png",
+  "tier": 2,
+  "labels": [
+   "Body: Blocky",
+   "Hat: Beanie",
+   "Eyes: Offset",
+   "Beard: Beard+Line",
+   "Chest: Diamond",
+   "Arms: Asym",
+   "Legs: Short",
+   "Item: Bottle",
+   "Stamp: None"
+  ]
+ },
+ {
+  "file": "tile-11.png",
+  "tier": 1,
+  "labels": [
+   "Body: Tall",
+   "Hat: Mohawk",
+   "Eyes: Offset",
+   "Beard: Line",
+   "Chest: Square",
+   "Arms: Blocks",
+   "Legs: Wide",
+   "Item: Bloom",
+   "Stamp: None"
+  ]
+ }
+]
