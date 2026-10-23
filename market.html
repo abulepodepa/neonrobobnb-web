@@ -6,50 +6,45 @@
   <title>NFT market · NeonRoboBNB</title>
   <meta name="description" content="NeonRoboBNB order book — state comes from the market contract on BNB Chain." />
   <link rel="stylesheet" href="css/style.css" />
+  <style>#lang { font-size: 12.5px; padding: 7px 12px; }</style>
 </head>
-<body>
+<body data-page="market">
 <header class="site">
   <div class="wrap">
-    <div class="brand">NEONROBOBNB<small>Proof-of-work · BNB Chain</small></div>
+    <div class="brand">NEONROBOBNB<small data-i18n="brand.sub">Proof-of-work · BNB Chain</small></div>
     <nav>
-      <a href="index.html">Home</a>
-      <a href="mint.html">Mint</a>
-      <a href="market.html" class="on">NFT market</a>
+      <a href="index.html" data-i18n="nav.home">Home</a>
+      <a href="mint.html" data-i18n="nav.mint">Mint</a>
+      <a href="market.html" class="on" data-i18n="nav.market">NFT market</a>
     </nav>
     <div class="spacer"></div>
-    <button id="connect">Connect wallet</button>
+    <button id="lang">中文</button>
+    <button id="connect" data-i18n="connect">Connect wallet</button>
   </div>
 </header>
 
 <div class="wrap">
-  <h1>NFT market</h1>
-  <p class="sub">Order book bergaya Ptah (place a bid · order book · quick sell · tape transaksi) —
-     untuk token NeonRoboBNB di BNB Chain.</p>
+  <h1 data-i18n="market.h1">NFT market</h1>
+  <p class="sub" data-i18n="market.sub">Ptah-style order book (place a bid · order book · quick sell · trade tape) — for NeonRoboBNB tokens on BNB Chain.</p>
 
-  <!-- State jujur: kontrak market memang BELUM ada. Tidak ada tabel yang
-       diisi angka karangan; begitu CONFIG.MARKET diisi, blok live tampil. -->
+  <!-- Honest state: the market contract does not exist yet. No table is
+       filled with invented numbers; once CONFIG.MARKET is set the live
+       block takes over. -->
   <div id="m-pending" class="panel gold">
-    <b>Kontrak market belum dipasang.</b>
-    <p class="tiny muted" style="margin:8px 0 0">
-      Order book butuh kontrak escrow USDT sendiri (placeBid / cancel / fill) —
-      kontrak itu dibuat & diuji terpisah, lalu alamatnya dimasukkan ke
-      <span class="mono">js/config.js</span> (<span class="mono">MARKET</span>).
-      Halaman ini menampilkan apa adanya: selama alamatnya kosong, tidak ada
-      harga, bid, atau tape yang ditampilkan — angka di sini selalu berasal dari
-      rantai, bukan dari tebakan.
-    </p>
+    <p style="margin:0" data-i18n="market.pending"><b>The market contract is not deployed yet.</b></p>
+    <p class="tiny muted" style="margin:8px 0 0" data-i18n="market.pending2">An order book needs its own USDT escrow contract (placeBid / cancel / fill) — built and tested separately, then its address goes into <span class="mono">js/config.js</span> (<span class="mono">MARKET</span>). While that address is empty this page shows no prices, bids or tape: every number here always comes from the chain, never from a guess.</p>
   </div>
 
   <div id="m-live" style="display:none">
     <div class="row" style="gap:12px; margin-bottom:16px">
-      <div class="stat" style="flex:1"><div class="k">Best bid</div><div class="v gold" id="best">—</div></div>
-      <div class="stat" style="flex:1"><div class="k">Open bids</div><div class="v" id="nbids">—</div></div>
-      <div class="stat" style="flex:1"><div class="k">Fee</div><div class="v" id="fee">—</div></div>
-      <div class="stat" style="flex:1"><div class="k">Next bid id</div><div class="v" id="next">—</div></div>
+      <div class="stat" style="flex:1"><div class="k" data-i18n="market.best">Best bid</div><div class="v gold" id="best">—</div></div>
+      <div class="stat" style="flex:1"><div class="k" data-i18n="market.nbids">Open bids</div><div class="v" id="nbids">—</div></div>
+      <div class="stat" style="flex:1"><div class="k" data-i18n="market.fee">Fee</div><div class="v" id="fee">—</div></div>
+      <div class="stat" style="flex:1"><div class="k" data-i18n="market.next">Next bid id</div><div class="v" id="next">—</div></div>
     </div>
     <div class="grid2">
-      <div class="panel"><h2 style="margin-top:0">Order book</h2><div id="book"></div></div>
-      <div class="panel"><h2 style="margin-top:0">Recent trades</h2><div id="tape"></div></div>
+      <div class="panel"><h2 style="margin-top:0" data-i18n="market.book">Order book</h2><div id="book"></div></div>
+      <div class="panel"><h2 style="margin-top:0" data-i18n="market.tape">Recent trades</h2><div id="tape"></div></div>
     </div>
   </div>
 </div>
@@ -58,6 +53,7 @@
 <script src="js/vendor/ethers.umd.min.js"></script>
 <script src="js/config.js"></script>
 <script src="js/chain.js"></script>
+<script src="js/i18n.js"></script>
 <script src="js/app.js"></script>
 <script>
 /* Market reads activate only when CONFIG.MARKET carries a real address.
@@ -70,7 +66,7 @@
     $("m-pending").style.display = live ? "none" : "block";
     $("m-live").style.display = live ? "block" : "none";
     if (!live) return;
-    UI.toast("MARKET terisi tapi reader belum dipasang — isi chain.js bersamaan dengan kontraknya.", true, 12000);
+    UI.toast(I18N.t("market.readerWarn"), true, 12000);
   });
 })();
 </script>

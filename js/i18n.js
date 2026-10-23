@@ -1,0 +1,366 @@
+/* NeonRoboBNB i18n — English is the base language, Chinese via the header
+   toggle (choice saved in localStorage). Static copy carries data-i18n keys;
+   dynamic painters re-run through window.__retranslate on switch. */
+(function () {
+  const DICT = {
+    en: {
+      "title.home": "NeonRoboBNB — proof-of-work collection on BNB Chain",
+      "title.mint": "Mint · NeonRoboBNB",
+      "title.market": "NFT market · NeonRoboBNB",
+
+      "brand.sub": "Proof-of-work · BNB Chain",
+      "nav.home": "Home",
+      "nav.mint": "Mint",
+      "nav.market": "NFT market",
+      "connect": "Connect wallet",
+      "wallet.linked": "Connected: ",
+
+      "meta.notDeployed": "(not deployed)",
+      "meta.open": "OPEN",
+      "meta.closed": "CLOSED",
+
+      "tier.0": "Common",
+      "tier.1": "Uncommon",
+      "tier.2": "Rare",
+      "tier.3": "Epic",
+      "tier.4": "Legend",
+      "rarity": "Rarity",
+
+      "slot.body": "Body",
+      "slot.hat": "Hat",
+      "slot.eyes": "Eyes",
+      "slot.beard": "Beard",
+      "slot.chest": "Chest",
+      "slot.arm": "Arms",
+      "slot.leg": "Legs",
+      "slot.item": "Item",
+      "slot.stamp": "Stamp",
+
+      /* ---- home ---- */
+      "hero.p": "10,000 neon robotos mined with proof-of-work (keccak) on BNB Chain. First unit per wallet <b>0.50 USDT</b>, every unit after <b>1.00 USDT</b> — quoted straight from the contract, no quantity limit.",
+      "hero.cta": "Start mining",
+      "hero.gallery": "View gallery",
+      "pending": "<b>Contracts not deployed yet.</b> The <span class=\"mono\">NNB</span> / <span class=\"mono\">ART</span> addresses in <span class=\"mono\">js/config.js</span> are still empty — the numbers below appear only after the deploy. This site never shows a number that did not come from the chain.",
+      "stat.mined": "Mined / supply",
+      "stat.first": "First-unit price",
+      "stat.next": "Price after that",
+      "stat.mining": "Mining",
+      "stat.target": "Target (bit)",
+      "stat.chain": "Chain",
+      "how.title": "How it works",
+      "how.1": "Your wallet searches for a <b>nonce</b> in the browser: <span class=\"mono\">keccak256(miner‖nonce‖anchor)</span> must be ≤ target (real work, off the main thread).",
+      "how.2": "The price is quoted from <span class=\"mono\">priceFor(wallet, n)</span> — a tier <b>per wallet</b>, never a static number.",
+      "how.3": "USDT is approved for the exact total (two steps), then <span class=\"mono\">mine(nonce, count)</span>.",
+      "how.4": "Proofs are single-use: one find = one batch (max 100 per transaction).",
+      "money.title": "Mint proceeds",
+      "money.p1": "Mint proceeds go <b>straight to the deployer's wallet</b> inside the same transaction — the contract never holds sale funds.",
+      "money.p2": "Supply 10,000, closed by <span class=\"mono\">CONTRACT_CEILING</span> in the bytecode — no one can raise it, not even the deployer.",
+      "contracts.title": "Contracts",
+      "contracts.nnb": "Collection (NNB)",
+      "contracts.art": "Art library (ART)",
+      "contracts.pay": "Payment (BSC-USD, 18 decimals)",
+      "contracts.note": "Addresses read from <span class=\"mono\">js/config.js</span> — the same file every page uses.",
+      "gallery.title": "Gallery",
+      "gallery.p": "Original art from this collection's generator — each tile uses its real trait roll (the labels are the actual roll made when the tile was rendered) and tiers follow the same rarity thresholds the contract uses. Supply and price numbers always come from the chain; this gallery is pure art.",
+      "sheet.bodies": "8 body silhouettes",
+      "sheet.combos": "Glow combos",
+      "sheet.rarity": "5 rarity tiers (Common → Legend)",
+      "sheet.stamp": "BNB stamp on/off",
+      "live.title": "Live preview from the chain",
+      "live.p": "Once the <span class=\"mono\">ART</span> library address is set, any seed can be rendered directly by its contract (traits + on-chain SVG):",
+      "seed.ph": "seed (uint256) — leave empty for random",
+      "seed.go": "Generate",
+      "note.artPending": "Art library not deployed yet (config ART is empty).",
+      "note.previewFail": "Preview failed",
+      "note.readFail": "Reading saleFacts failed",
+
+      /* ---- mint ---- */
+      "mint.h1": "Mine a robo",
+      "mint.sub": "The quote below is your own <span class=\"mono\">priceFor(wallet, n)</span> — first tier <b>0.50 USDT</b>, then a flat <b>1.00 USDT</b>, with no wallet quantity limit (max 100 units per PoW transaction). Proceeds go straight to the deployer's wallet in the same transaction.",
+      "mint.stat.open": "Mining",
+      "mint.stat.supply": "Mined / supply",
+      "mint.stat.target": "Target",
+      "mint.stat.tier": "Your first tier",
+      "mint.step1": "1 · Find a nonce (PoW)",
+      "mint.step1note": "A browser worker computes <span class=\"mono\">keccak256(address‖nonce‖anchor)</span> until it is ≤ target. It can take a few seconds — keep the tab open while it runs.",
+      "mint.go": "Start nonce search",
+      "mint.stop": "Stop",
+      "mint.idle": "idle",
+      "mint.running": "running…",
+      "mint.searching": "searching… at nonce",
+      "mint.found": "FOUND nonce",
+      "mint.stopped": "stopped (nonce kept)",
+      "mint.stoppedPlain": "stopped",
+      "mint.step2": "2 · Pay & mint",
+      "mint.qty": "Unit count",
+      "mint.total": "Total (contract quote, per wallet)",
+      "mint.approveGo": "Approve & mint",
+      "mint.tierFirst": "first tier still active · ",
+      "mint.tierList": "list tier active · ",
+      "mint.balance": "balance ",
+      "mint.approved": " · approved",
+      "mint.needNonce": "Find a nonce first (step 1).",
+      "mint.notEnough": "Not enough USDT for this quote.",
+      "mint.readySign": "Ready: nonce + funds + approval OK.",
+      "mint.readyApprove": "Ready — will approve the exact total first.",
+      "mint.verify": "Post-mint verification",
+      "mint.v1": "Receipt <span class=\"mono\">status = 0x1</span>.",
+      "mint.v2": "Count your <span class=\"mono\">NeonMined</span> events — the real ids come from there, not from a preview.",
+      "mint.v3": "<span class=\"mono\">ownerOf(id)</span> = you; USDT reduced by exactly the quote.",
+      "mint.owned": "Your tokens",
+      "mint.scan": "Scan wallet tokens",
+      "mint.scanNote": "The collection is not enumerable — scanning reads <span class=\"mono\">ownerOf(1..supply)</span> through multicall.",
+      "mint.scanning": "scanning",
+      "mint.scanDone": "Done — ",
+      "mint.foundN": " found.",
+      "mint.mineList": "yours: #",
+      "mint.mineNone": "no tokens under this address",
+      "mint.rules": "Rules (from the contract)",
+      "mint.rule.first": "First unit per wallet",
+      "mint.rule.next": "Units after that",
+      "mint.rule.tx": "Per-transaction cap",
+      "mint.rule.txVal": "100 (MAX_PER_TX, PoW)",
+      "mint.rule.wallet": "Per-wallet cap",
+      "mint.rule.walletVal": "None (no limit)",
+      "mint.err.status": "Reading status failed",
+      "mint.err.connect": "Connect the wallet first — the nonce is bound to your address.",
+      "mint.err.noNonce": "Nonce not found yet.",
+      "mint.err.usdtLow": "USDT not enough: needs ",
+      "mint.err.closed": "Mining has been closed.",
+      "mint.err.used": "Nonce already used — search again.",
+      "mint.err.step1": "Step 1/2 — approve exactly ",
+      "mint.err.step2": "Step 2/2 — mine(",
+      "mint.err.approved": "Approval confirmed.",
+      "mint.err.success": "Mint succeeded ✓ #",
+      "mint.err.warn": "WARNING: no NeonMined in the receipt — do not treat this as success.",
+      "mint.verifyLine1": "tx",
+      "mint.verifyLine2": "NeonMined ids:",
+      "mint.verifyLine3": "Transfer from 0x0:",
+      "mint.verifyPaid": "USDT paid:",
+
+      /* ---- market ---- */
+      "market.h1": "NFT market",
+      "market.sub": "Ptah-style order book (place a bid · order book · quick sell · trade tape) — for NeonRoboBNB tokens on BNB Chain.",
+      "market.pending": "<b>The market contract is not deployed yet.</b>",
+      "market.pending2": "An order book needs its own USDT escrow contract (placeBid / cancel / fill) — built and tested separately, then its address goes into <span class=\"mono\">js/config.js</span> (<span class=\"mono\">MARKET</span>). While that address is empty this page shows no prices, bids or tape: every number here always comes from the chain, never from a guess.",
+      "market.best": "Best bid",
+      "market.nbids": "Open bids",
+      "market.fee": "Fee",
+      "market.next": "Next bid id",
+      "market.book": "Order book",
+      "market.tape": "Recent trades",
+      "market.readerWarn": "MARKET address is set but the reader is not wired yet — fill chain.js together with the contract.",
+
+      /* ---- app.js errors ---- */
+      "err.work": "This nonce has not met the PoW target — keep searching.",
+      "err.proof": "This nonce was already used by another batch — find a new one.",
+      "err.supply": "Supply is sold out.",
+      "err.paused": "Mining was closed by the deployer.",
+      "err.batch": "Max 100 units per transaction.",
+      "err.payment": "USDT is short or not approved yet — check balance/allowance.",
+      "err.rejected": "Cancelled in the wallet.",
+      "err.insufficient": "Not enough funds (price + gas).",
+      "err.nowallet": "Wallet injector not found — open this page from a wallet browser (Binance/MetaMask).",
+      "err.gas": "Gas too low — try again."
+    },
+
+    zh: {
+      "title.home": "NeonRoboBNB — BNB 链上的工作量证明系列",
+      "title.mint": "铸造 · NeonRoboBNB",
+      "title.market": "NFT 市场 · NeonRoboBNB",
+
+      "brand.sub": "工作量证明 · BNB Chain",
+      "nav.home": "首页",
+      "nav.mint": "铸造",
+      "nav.market": "NFT 市场",
+      "connect": "连接钱包",
+      "wallet.linked": "已连接：",
+
+      "meta.notDeployed": "（未部署）",
+      "meta.open": "开放中",
+      "meta.closed": "已关闭",
+
+      "tier.0": "普通",
+      "tier.1": "少见",
+      "tier.2": "稀有",
+      "tier.3": "史诗",
+      "tier.4": "传说",
+      "rarity": "稀有度",
+
+      "slot.body": "体型",
+      "slot.hat": "帽子",
+      "slot.eyes": "眼睛",
+      "slot.beard": "胡须",
+      "slot.chest": "胸甲",
+      "slot.arm": "手臂",
+      "slot.leg": "腿部",
+      "slot.item": "物品",
+      "slot.stamp": "印章",
+
+      "hero.p": "10,000 个霓虹机器人在 BNB Chain 上以工作量证明（keccak）挖出。每个钱包第一个 <b>0.50 USDT</b>，之后每个 <b>1.00 USDT</b> —— 价格直接读自合约，数量不限。",
+      "hero.cta": "开始挖矿",
+      "hero.gallery": "查看画廊",
+      "pending": "<b>合约尚未部署。</b> <span class=\"mono\">js/config.js</span> 中的 <span class=\"mono\">NNB</span> / <span class=\"mono\">ART</span> 地址仍为空 —— 下面的数字要等部署后才会出现。本站从不显示非链上来源的数字。",
+      "stat.mined": "已挖 / 总量",
+      "stat.first": "首个单价",
+      "stat.next": "后续单价",
+      "stat.mining": "挖矿状态",
+      "stat.target": "目标（位）",
+      "stat.chain": "链",
+      "how.title": "工作原理",
+      "how.1": "钱包在浏览器里搜索 <b>nonce</b>：<span class=\"mono\">keccak256(miner‖nonce‖anchor)</span> 必须 ≤ 目标值（真实算力，在后台线程运行）。",
+      "how.2": "价格读自 <span class=\"mono\">priceFor(wallet, n)</span> —— 按<b>钱包</b>分档，绝非写死的数字。",
+      "how.3": "先按总额精确授权 USDT（两步），再调用 <span class=\"mono\">mine(nonce, count)</span>。",
+      "how.4": "工作量证明一次性使用：一次找到 = 一批（每笔最多 100）。",
+      "money.title": "铸造收益",
+      "money.p1": "铸造收益在<b>同一笔交易内直接进入部署者钱包</b> —— 合约从不持有销售资金。",
+      "money.p2": "总量 10,000，由字节码中的 <span class=\"mono\">CONTRACT_CEILING</span> 封顶 —— 任何人都无法提高，部署者也不例外。",
+      "contracts.title": "合约",
+      "contracts.nnb": "系列合约（NNB）",
+      "contracts.art": "美术库（ART）",
+      "contracts.pay": "支付（BSC-USD，18 位小数）",
+      "contracts.note": "地址读自 <span class=\"mono\">js/config.js</span> —— 所有页面共用同一份文件。",
+      "gallery.title": "画廊",
+      "gallery.p": "来自本系列生成器的原生美术 —— 每张图使用其真实 trait 抽取（标签就是出图时的那次抽取），等级沿用与合约一致的稀有度阈值。供应量与价格数字永远来自链上；画廊只展示美术。",
+      "sheet.bodies": "8 种体型轮廓",
+      "sheet.combos": "光晕组合",
+      "sheet.rarity": "5 个稀有度等级（普通 → 传说）",
+      "sheet.stamp": "BNB 印章 有/无",
+      "live.title": "链上实时预览",
+      "live.p": "一旦配置了 <span class=\"mono\">ART</span> 库地址，任意 seed 都可由合约直接渲染（traits + 链上 SVG）：",
+      "seed.ph": "seed（uint256）— 留空则随机",
+      "seed.go": "生成",
+      "note.artPending": "美术库尚未部署（config 的 ART 为空）。",
+      "note.previewFail": "预览失败",
+      "note.readFail": "读取 saleFacts 失败",
+
+      "mint.h1": "挖一个机器人",
+      "mint.sub": "下方报价是你自己的 <span class=\"mono\">priceFor(wallet, n)</span> —— 首个档位 <b>0.50 USDT</b>，之后一律 <b>1.00 USDT</b>，钱包数量不限（每笔 PoW 交易最多 100 个）。铸造收益在同一笔交易内直接进入部署者钱包。",
+      "mint.stat.open": "挖矿状态",
+      "mint.stat.supply": "已挖 / 总量",
+      "mint.stat.target": "目标",
+      "mint.stat.tier": "你的首个档位",
+      "mint.step1": "1 · 寻找 nonce（PoW）",
+      "mint.step1note": "浏览器工作线程计算 <span class=\"mono\">keccak256(address‖nonce‖anchor)</span> 直到 ≤ 目标值。可能需要几秒 —— 期间请勿关闭标签页。",
+      "mint.go": "开始寻找 nonce",
+      "mint.stop": "停止",
+      "mint.idle": "待机",
+      "mint.running": "运行中…",
+      "mint.searching": "搜索中… nonce",
+      "mint.found": "找到 nonce",
+      "mint.stopped": "已停止（nonce 已保留）",
+      "mint.stoppedPlain": "已停止",
+      "mint.step2": "2 · 支付并铸造",
+      "mint.qty": "数量",
+      "mint.total": "总额（合约报价，按钱包）",
+      "mint.approveGo": "授权并铸造",
+      "mint.tierFirst": "首个档位有效 · ",
+      "mint.tierList": "列表档位生效 · ",
+      "mint.balance": "余额 ",
+      "mint.approved": " · 已授权",
+      "mint.needNonce": "请先找到 nonce（第 1 步）。",
+      "mint.notEnough": "USDT 不足以支付本次报价。",
+      "mint.readySign": "就绪：nonce + 资金 + 授权均确认。",
+      "mint.readyApprove": "就绪 —— 将先按总额精确授权。",
+      "mint.verify": "铸造后验证",
+      "mint.v1": "回执 <span class=\"mono\">status = 0x1</span>。",
+      "mint.v2": "数一数你的 <span class=\"mono\">NeonMined</span> 事件 —— 真实 id 来自这里，而不是预览。",
+      "mint.v3": "<span class=\"mono\">ownerOf(id)</span> = 你；USDT 扣减恰等于报价。",
+      "mint.owned": "你的代币",
+      "mint.scan": "扫描钱包代币",
+      "mint.scanNote": "该系列不可枚举 —— 扫描通过 multicall 读取 <span class=\"mono\">ownerOf(1..supply)</span>。",
+      "mint.scanning": "扫描中 ",
+      "mint.scanDone": "完成 —— ",
+      "mint.foundN": " 个命中。",
+      "mint.mineList": "你的：#",
+      "mint.mineNone": "该地址名下没有代币",
+      "mint.rules": "规则（来自合约）",
+      "mint.rule.first": "每钱包首个单价",
+      "mint.rule.next": "后续单价",
+      "mint.rule.tx": "每笔上限",
+      "mint.rule.txVal": "100（MAX_PER_TX，PoW）",
+      "mint.rule.wallet": "每钱包上限",
+      "mint.rule.walletVal": "无（不限量）",
+      "mint.err.status": "读取状态失败",
+      "mint.err.connect": "请先连接钱包 —— nonce 与你的地址绑定。",
+      "mint.err.noNonce": "尚未找到 nonce。",
+      "mint.err.usdtLow": "USDT 不足：还需 ",
+      "mint.err.closed": "挖矿已关闭。",
+      "mint.err.used": "该 nonce 已被使用 —— 重新搜索。",
+      "mint.err.step1": "第 1/2 步 —— 精确授权 ",
+      "mint.err.step2": "第 2/2 步 —— mine(",
+      "mint.err.approved": "授权已确认。",
+      "mint.err.success": "铸造成功 ✓ #",
+      "mint.err.warn": "警告：回执中没有 NeonMined —— 不要视为成功。",
+      "mint.verifyLine1": "交易",
+      "mint.verifyLine2": "NeonMined id：",
+      "mint.verifyLine3": "Transfer from 0x0：",
+      "mint.verifyPaid": "支付 USDT：",
+
+      "market.h1": "NFT 市场",
+      "market.sub": "Ptah 风格订单簿（挂买单 · 订单簿 · 快速卖出 · 成交流水）—— 面向 BNB 链上的 NeonRoboBNB 代币。",
+      "market.pending": "<b>市场合约尚未部署。</b>",
+      "market.pending2": "订单簿需要独立的 USDT 托管合约（placeBid / cancel / fill）—— 单独构建与测试后，其地址会写入 <span class=\"mono\">js/config.js</span>（<span class=\"mono\">MARKET</span>）。在地址为空期间，本页不显示任何价格、买单或成交：这里的数字永远来自链上，绝不臆造。",
+      "market.best": "最高出价",
+      "market.nbids": "未成交买单",
+      "market.fee": "手续费",
+      "market.next": "下一个买单 id",
+      "market.book": "订单簿",
+      "market.tape": "最近成交",
+      "market.readerWarn": "MARKET 地址已配置但读取逻辑尚未接入 —— 请随合约一起补全 chain.js。",
+
+      "err.work": "该 nonce 尚未达到 PoW 目标 —— 继续搜索。",
+      "err.proof": "该 nonce 已被其他批次使用 —— 请换一个。",
+      "err.supply": "总量已售罄。",
+      "err.paused": "部署者已关闭挖矿。",
+      "err.batch": "每笔交易最多 100 个。",
+      "err.payment": "USDT 不足或尚未授权 —— 检查余额/授权额度。",
+      "err.rejected": "已在钱包中取消。",
+      "err.insufficient": "资金不足（价格 + gas）。",
+      "err.nowallet": "未检测到钱包注入 —— 请用钱包浏览器打开（Binance/MetaMask）。",
+      "err.gas": "gas 过低 —— 请重试。"
+    }
+  };
+
+  const KEY = "nnb-lang";
+  function current() {
+    try { return localStorage.getItem(KEY) === "zh" ? "zh" : "en"; } catch (e) { return "en"; }
+  }
+  function save(lang) { try { localStorage.setItem(KEY, lang); } catch (e) {} }
+
+  function t(key) {
+    const lang = current();
+    const s = (DICT[lang] && DICT[lang][key]);
+    if (s != null) return s;
+    return DICT.en[key] != null ? DICT.en[key] : key;
+  }
+
+  function apply(lang) {
+    document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+      el.innerHTML = t(el.getAttribute("data-i18n"));
+    });
+    document.querySelectorAll("[data-i18n-ph]").forEach((el) => {
+      el.placeholder = t(el.getAttribute("data-i18n-ph"));
+    });
+    const page = document.body.getAttribute("data-page");
+    if (page) document.title = t("title." + page);
+    const btn = document.getElementById("lang");
+    if (btn) btn.textContent = lang === "en" ? "中文" : "EN";
+    (window.__retranslate || []).forEach((fn) => { try { fn(); } catch (e) {} });
+  }
+
+  function toggle() {
+    const next = current() === "en" ? "zh" : "en";
+    save(next);
+    apply(next);
+  }
+
+  window.I18N = { t, apply, toggle, current };
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("lang");
+    if (btn) btn.addEventListener("click", toggle);
+    apply(current());
+  });
+})();

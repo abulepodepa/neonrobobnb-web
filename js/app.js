@@ -54,21 +54,22 @@
 
   function paintConnect() {
     const b = $("connect");
-    if (b) b.textContent = addr ? short(addr) : "Connect wallet";
+    if (b) b.textContent = addr ? short(addr) : (typeof I18N !== "undefined" ? I18N.t("connect") : "Connect wallet");
   }
 
   function errText(e) {
     const raw = String((e && (e.reason || e.shortMessage || e.message)) || e);
-    if (raw.includes("WorkOverTarget")) return "Nonce belum memenuhi target PoW — lanjutkan mencari.";
-    if (raw.includes("ProofAlreadyUsed")) return "Nonce ini sudah terpakai batch lain — cari nonce baru.";
-    if (raw.includes("SupplyExhausted")) return "Supply sudah habis.";
-    if (raw.includes("MiningClosed")) return "Mining sudah dihentikan deployer.";
-    if (raw.includes("BatchTooLarge")) return "Jumlah per transaksi maksimal 100.";
-    if (raw.includes("PaymentFailed")) return "USDT tidak cukup atau belum di-approve — cek saldo/allowance.";
-    if (raw.includes("user rejected") || raw.includes("ACTION_REJECTED")) return "Dibatalkan di wallet.";
-    if (raw.includes("insufficient funds")) return "Saldo tidak cukup (harga + gas).";
-    if (raw === "no-wallet") return "Wallet injector tidak ditemukan — buka dari wallet browser (Binance/MetaMask).";
-    if (raw.includes("underpriced") || raw.includes("replacement")) return "Gas terlalu rendah — coba lagi.";
+    const T = (k) => (typeof I18N !== "undefined" ? I18N.t(k) : k);
+    if (raw.includes("WorkOverTarget")) return T("err.work");
+    if (raw.includes("ProofAlreadyUsed")) return T("err.proof");
+    if (raw.includes("SupplyExhausted")) return T("err.supply");
+    if (raw.includes("MiningClosed")) return T("err.paused");
+    if (raw.includes("BatchTooLarge")) return T("err.batch");
+    if (raw.includes("PaymentFailed")) return T("err.payment");
+    if (raw.includes("user rejected") || raw.includes("ACTION_REJECTED")) return T("err.rejected");
+    if (raw.includes("insufficient funds")) return T("err.insufficient");
+    if (raw === "no-wallet") return T("err.nowallet");
+    if (raw.includes("underpriced") || raw.includes("replacement")) return T("err.gas");
     return raw.slice(0, 180);
   }
 
@@ -86,7 +87,7 @@
   onReady(() => {
     const b = $("connect");
     if (b) b.addEventListener("click", async () => {
-      try { await ensureWallet(); toast("Tertambat: " + short(addr)); }
+      try { await ensureWallet(); toast((typeof I18N !== "undefined" ? I18N.t("wallet.linked") : "Connected: ") + short(addr)); }
       catch (e) { toast(errText(e), true); }
     });
     paintConnect();

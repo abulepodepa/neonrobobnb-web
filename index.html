@@ -16,95 +16,78 @@
     .tier.t3 { color: #d79bff; } .tier.t4 { color: var(--gold); border-bottom-color: var(--gold-dim); }
     .tl { font-size: 11px; line-height: 1.5; padding: 7px 9px 9px; color: var(--muted); font-family: var(--mono); }
     .sheet { width: 100%; display: block; border-radius: 8px; border: 1px solid var(--line); margin-top: 8px; }
+    #lang { font-size: 12.5px; padding: 7px 12px; }
   </style>
 </head>
-<body>
+<body data-page="home">
 <header class="site">
   <div class="wrap">
-    <div class="brand">NEONROBOBNB<small>Proof-of-work · BNB Chain</small></div>
+    <div class="brand">NEONROBOBNB<small data-i18n="brand.sub">Proof-of-work · BNB Chain</small></div>
     <nav>
-      <a href="index.html" class="on">Home</a>
-      <a href="mint.html">Mint</a>
-      <a href="market.html">NFT market</a>
+      <a href="index.html" class="on" data-i18n="nav.home">Home</a>
+      <a href="mint.html" data-i18n="nav.mint">Mint</a>
+      <a href="market.html" data-i18n="nav.market">NFT market</a>
     </nav>
     <div class="spacer"></div>
-    <button id="connect">Connect wallet</button>
+    <button id="lang">中文</button>
+    <button id="connect" data-i18n="connect">Connect wallet</button>
   </div>
 </header>
 
 <div class="wrap">
   <div class="hero">
     <h1>NEONROBOBNB</h1>
-    <p>10.000 neon robo ditambang dengan bukti-kerja (keccak) di BNB Chain.
-       Unit pertama per wallet <b>0,50 USDT</b>, unit berikutnya <b>1,00 USDT</b>
-       — dikutip langsung dari kontrak, tanpa batas jumlah.</p>
-    <a class="btn cta" href="mint.html">Mulai mining</a>
-    <a class="btn" href="#gallery">Lihat gallery</a>
+    <p data-i18n="hero.p">10,000 neon robotos mined with proof-of-work (keccak) on BNB Chain. First unit per wallet <b>0.50 USDT</b>, every unit after <b>1.00 USDT</b> — quoted straight from the contract, no quantity limit.</p>
+    <a class="btn cta" href="mint.html" data-i18n="hero.cta">Start mining</a>
+    <a class="btn" href="#gallery" data-i18n="hero.gallery">View gallery</a>
     <div style="margin-top:26px"><img src="img/hero.png" alt="NeonRoboBNB hero" width="300" style="border-radius:14px;border:1px solid var(--line)" /></div>
   </div>
 
-  <div id="pending" class="panel gold" style="display:none">
-    <b>Kontrak belum terpasang.</b> Alamat <span class="mono">NNB</span> /
-    <span class="mono">ART</span> di <span class="mono">js/config.js</span> masih
-    kosong — semua angka di bawah baru terbaca setelah deploy. Situs tidak
-    menampilkan angka apa pun yang bukan berasal dari rantai.
-  </div>
+  <div id="pending" class="panel gold" style="display:none" data-i18n="pending"></div>
 
   <div class="row" style="gap:12px; margin-bottom:6px">
-    <div class="stat" style="flex:1"><div class="k">Mined / supply</div><div class="v" id="s-supply">—</div></div>
-    <div class="stat" style="flex:1"><div class="k">Harga unit pertama</div><div class="v gold" id="s-first">—</div></div>
-    <div class="stat" style="flex:1"><div class="k">Harga berikutnya</div><div class="v gold" id="s-list">—</div></div>
-    <div class="stat" style="flex:1"><div class="k">Mining</div><div class="v" id="s-open">—</div></div>
+    <div class="stat" style="flex:1"><div class="k" data-i18n="stat.mined">Mined / supply</div><div class="v" id="s-supply">—</div></div>
+    <div class="stat" style="flex:1"><div class="k" data-i18n="stat.first">First-unit price</div><div class="v gold" id="s-first">—</div></div>
+    <div class="stat" style="flex:1"><div class="k" data-i18n="stat.next">Price after that</div><div class="v gold" id="s-list">—</div></div>
+    <div class="stat" style="flex:1"><div class="k" data-i18n="stat.mining">Mining</div><div class="v" id="s-open">—</div></div>
   </div>
   <div class="row" style="gap:12px; margin-bottom:18px">
-    <div class="stat" style="flex:1"><div class="k">Target (bit)</div><div class="v" id="s-bits">—</div></div>
-    <div class="stat" style="flex:1"><div class="k">Dana di kontrak</div><div class="v" id="s-held">—</div></div>
-    <div class="stat" style="flex:1"><div class="k">Chain</div><div class="v">BNB · 56</div></div>
+    <div class="stat" style="flex:1"><div class="k" data-i18n="stat.target">Target (bit)</div><div class="v" id="s-bits">—</div></div>
+    <div class="stat" style="flex:1"><div class="k" data-i18n="stat.chain">Chain</div><div class="v">BNB · 56</div></div>
   </div>
 
   <div class="grid2">
     <div class="panel">
-      <h2 style="margin-top:0">Cara kerja</h2>
+      <h2 style="margin-top:0" data-i18n="how.title">How it works</h2>
       <ol class="tiny muted" style="line-height:1.8; padding-left:18px; margin:0">
-        <li>Wallet mencari <b>nonce</b> di browser: <span class="mono">keccak256(miner‖nonce‖anchor)</span> harus ≤ target (kerja nyata, off-thread).</li>
-        <li>Kutipan harga dibaca dari <span class="mono">priceFor(wallet, n)</span> — tier <b>per wallet</b>, bukan harga statis.</li>
-        <li>USDT di-approve tepat total (dua langkah), lalu <span class="mono">mine(nonce, count)</span>.</li>
-        <li>Bukti bersifat sekali pakai: satu temuan = satu batch (maks 100/transaksi).</li>
+        <li data-i18n="how.1">Your wallet searches for a <b>nonce</b> in the browser: <span class="mono">keccak256(miner‖nonce‖anchor)</span> must be ≤ target (real work, off the main thread).</li>
+        <li data-i18n="how.2">The price is quoted from <span class="mono">priceFor(wallet, n)</span> — a tier <b>per wallet</b>, never a static number.</li>
+        <li data-i18n="how.3">USDT is approved for the exact total (two steps), then <span class="mono">mine(nonce, count)</span>.</li>
+        <li data-i18n="how.4">Proofs are single-use: one find = one batch (max 100 per transaction).</li>
       </ol>
     </div>
     <div class="panel gold">
-      <h2 style="margin-top:0">Uang hasil mint</h2>
-      <p class="tiny muted" style="margin:0 0 8px">
-        <b>Langsung ke wallet deployer</b> di dalam transaksi mint yang sama —
-        kontrak tidak pernah menahan dana, jadi tidak ada pot dan tidak ada
-        fungsi tarik. Angka <b>Dana di kontrak</b> di atas harus selalu
-        <span class="mono">0</span>; itu diambil dari
-        <span class="mono">saleConfig()</span> sebagai bukti, bukan janji.
-      </p>
-      <p class="tiny muted" style="margin:0">
-        Supply 10.000, ditutup oleh <span class="mono">CONTRACT_CEILING</span>
-        di bytecode — tidak bisa dinaikkan siapa pun, termasuk deployer.
-      </p>
+      <h2 style="margin-top:0" data-i18n="money.title">Mint proceeds</h2>
+      <p class="tiny muted" style="margin:0 0 8px" data-i18n="money.p1">Mint proceeds go <b>straight to the deployer's wallet</b> inside the same transaction — the contract never holds sale funds.</p>
+      <p class="tiny muted" style="margin:0" data-i18n="money.p2">Supply 10,000, closed by <span class="mono">CONTRACT_CEILING</span> in the bytecode — no one can raise it, not even the deployer.</p>
     </div>
   </div>
 
   <div class="panel">
-    <h2 style="margin-top:0">Kontrak</h2>
+    <h2 style="margin-top:0" data-i18n="contracts.title">Contracts</h2>
     <table>
       <tbody>
-        <tr><td class="txt">Koleksi (NNB)</td><td id="a-nnb">—</td></tr>
-        <tr><td class="txt">Library seni (ART)</td><td id="a-art">—</td></tr>
-        <tr><td class="txt">Pembayaran (BSC-USD, 18 desimal)</td><td id="a-usdt">—</td></tr>
+        <tr><td class="txt" data-i18n="contracts.nnb">Collection (NNB)</td><td id="a-nnb">—</td></tr>
+        <tr><td class="txt" data-i18n="contracts.art">Art library (ART)</td><td id="a-art">—</td></tr>
+        <tr><td class="txt" data-i18n="contracts.pay">Payment (BSC-USD, 18 decimals)</td><td id="a-usdt">—</td></tr>
       </tbody>
     </table>
-    <p class="tiny muted" style="margin-top:8px">Alamat dibaca dari <span class="mono">js/config.js</span> — tempat yang sama dipakai semua halaman.</p>
+    <p class="tiny muted" style="margin-top:8px" data-i18n="contracts.note">Addresses read from <span class="mono">js/config.js</span> — the same file every page uses.</p>
   </div>
 
   <div class="panel" id="gallery">
-    <h2 style="margin-top:0">Gallery</h2>
-    <p class="tiny muted">Art asli dari generator koleksi ini — tile di bawah memakai roll trait
-       (label = roll asli saat tile dibuat) dan tier mengikuti ambang rarity yang sama dengan
-       yang dipakai kontrak. Angka supply/harga selalu dari rantai; galeri ini murni seni.</p>
+    <h2 style="margin-top:0" data-i18n="gallery.title">Gallery</h2>
+    <p class="tiny muted" data-i18n="gallery.p">Original art from this collection's generator — each tile uses its real trait roll (the labels are the actual roll made when the tile was rendered) and tiers follow the same rarity thresholds the contract uses. Supply and price numbers always come from the chain; this gallery is pure art.</p>
     <div class="tiles">
         <div class="tile"><img src="img/tile-00.png" alt="NeonRoboBNB preview" loading="lazy" /><div class="tier t1">Uncommon</div><div class="tl">Body: Chamfer<br>Hat: Bare<br>Eyes: Shut<br>Beard: Beard<br>Chest: Square<br>Arms: Raised<br>Legs: Block<br>Item: Key<br>Stamp: None</div></div>
         <div class="tile"><img src="img/tile-01.png" alt="NeonRoboBNB preview" loading="lazy" /><div class="tier t1">Uncommon</div><div class="tl">Body: Tall<br>Hat: Bare<br>Eyes: Cyclops<br>Beard: Beard+Line<br>Chest: None<br>Arms: Blocks<br>Legs: Standard<br>Item: None<br>Stamp: None</div></div>
@@ -122,21 +105,20 @@
 
     <hr class="sep" />
     <div class="grid2">
-      <div><b class="tiny">8 siluet badan</b><img class="sheet" src="img/sheet-bodies.png" alt="8 body silhouettes" loading="lazy" /></div>
-      <div><b class="tiny">Combo glow</b><img class="sheet" src="img/sheet-combos.png" alt="8 glow combos" loading="lazy" /></div>
+      <div><b class="tiny" data-i18n="sheet.bodies">8 body silhouettes</b><img class="sheet" src="img/sheet-bodies.png" alt="8 body silhouettes" loading="lazy" /></div>
+      <div><b class="tiny" data-i18n="sheet.combos">Glow combos</b><img class="sheet" src="img/sheet-combos.png" alt="8 glow combos" loading="lazy" /></div>
     </div>
     <div class="grid2">
-      <div><b class="tiny">5 tier rarity (Common → Legend)</b><img class="sheet" src="img/sheet-rarity.png" alt="5 rarity tiers" loading="lazy" /></div>
-      <div><b class="tiny">Stempel BNB on/off</b><img class="sheet" src="img/sheet-stamp.png" alt="BNB stamp on and off" loading="lazy" /></div>
+      <div><b class="tiny" data-i18n="sheet.rarity">5 rarity tiers (Common → Legend)</b><img class="sheet" src="img/sheet-rarity.png" alt="5 rarity tiers" loading="lazy" /></div>
+      <div><b class="tiny" data-i18n="sheet.stamp">BNB stamp on/off</b><img class="sheet" src="img/sheet-stamp.png" alt="BNB stamp on and off" loading="lazy" /></div>
     </div>
 
     <hr class="sep" />
-    <h2 style="margin-top:0">Preview langsung dari rantai</h2>
-    <p class="tiny muted">Saat alamat library <span class="mono">ART</span> terpasang, seed apa pun
-       bisa dirender langsung oleh kontraknya (traits + SVG on-chain):</p>
+    <h2 style="margin-top:0" data-i18n="live.title">Live preview from the chain</h2>
+    <p class="tiny muted" data-i18n="live.p">Once the <span class="mono">ART</span> library address is set, any seed can be rendered directly by its contract (traits + on-chain SVG):</p>
     <div class="row" style="gap:8px; margin-bottom:12px">
-      <input id="seed" placeholder="seed (uint256) — kosongkan untuk acak" style="max-width:420px" />
-      <button id="seed-go">Generate</button>
+      <input id="seed" data-i18n-ph="seed.ph" placeholder="seed (uint256) — leave empty for random" style="max-width:420px" />
+      <button id="seed-go" data-i18n="seed.go">Generate</button>
     </div>
     <div id="grid" class="row" style="gap:12px"></div>
     <p class="tiny" id="grid-note" style="color:var(--bad)"></p>
@@ -147,17 +129,19 @@
 <script src="js/vendor/ethers.umd.min.js"></script>
 <script src="js/config.js"></script>
 <script src="js/chain.js"></script>
+<script src="js/i18n.js"></script>
 <script src="js/app.js"></script>
 <script>
 (async () => {
   const C = CONFIG, UI = TempleUI, $ = UI.$;
-  const SHORT = ["Body", "Hat", "Eyes", "Beard", "Chest", "Arms", "Legs", "Item", "Stamp"];
+  const T = (k) => I18N.t(k);
+  const SLOTS = ["slot.body", "slot.hat", "slot.eyes", "slot.beard", "slot.chest", "slot.arm", "slot.leg", "slot.item", "slot.stamp"];
 
   async function load() {
     const deployed = Temple.deployed();
     $("pending").style.display = deployed ? "none" : "block";
-    $("a-nnb").textContent = deployed ? C.NNB : "(belum terpasang)";
-    $("a-art").textContent = Temple.artDeployed() ? C.ART : "(belum terpasang)";
+    $("a-nnb").textContent = deployed ? C.NNB : T("meta.notDeployed");
+    $("a-art").textContent = Temple.artDeployed() ? C.ART : T("meta.notDeployed");
     $("a-usdt").textContent = C.USDT;
     if (!deployed) return;
     try {
@@ -165,33 +149,28 @@
       $("s-supply").textContent = s.supply.toLocaleString("en-US") + " / " + s.maxSupply.toLocaleString("en-US");
       $("s-first").textContent = UI.usdt(s.firstPrice, 2) + " USDT";
       $("s-list").textContent = UI.usdt(s.listPrice, 2) + " USDT";
-      $("s-open").textContent = s.open ? "OPEN" : "CLOSED";
+      $("s-open").textContent = s.open ? T("meta.open") : T("meta.closed");
       $("s-open").style.color = s.open ? "var(--ok)" : "var(--bad)";
-      // target = 2^(256-bits)-1 -> binary length is exactly 256-bits
       const bits = s.target > 0n ? 256 - s.target.toString(2).length : 0;
       $("s-bits").textContent = bits + " bit";
-      // contract must hold nothing — that IS the design; show the raw figure
-      $("s-held").textContent = UI.usdt(s.contractHeld, 4) + " USDT" + (s.contractHeld === 0n ? " ✓" : "");
-      $("s-held").style.color = s.contractHeld === 0n ? "var(--ok)" : "var(--bad)";
-    } catch (e) { UI.toast("Gagal baca saleFacts: " + UI.errText(e), true); }
+    } catch (e) { UI.toast(T("note.readFail") + ": " + UI.errText(e), true); }
   }
 
-  /* ---- gallery ---- */
   function tile(parts, tier, svg) {
     const el = document.createElement("div");
     el.className = "stat";
     el.style.width = "218px";
-    const names = SHORT.map((n, i) => `<div class="tiny"><span class="muted">${n}</span> ${parts[i] || ""}</div>`).join("");
+    const names = SLOTS.map((k, i) => `<div class="tiny"><span class="muted" data-i18n="${k}">${T(k)}</span> ${parts[i] || ""}</div>`).join("");
     el.innerHTML = `<div style="background:#000;border-radius:8px;overflow:hidden">${svg}</div>
       <div style="margin-top:8px">${names}</div>
-      <div class="tiny gold" style="color:var(--gold);margin-top:6px">Rarity: ${["Common", "Uncommon", "Rare", "Epic", "Legend"][tier] || tier}</div>`;
+      <div class="tiny" style="color:var(--gold);margin-top:6px"><span data-i18n="rarity">Rarity</span>: <span data-i18n="tier.${tier}">${T("tier." + tier)}</span></div>`;
     const s = el.querySelector("svg");
     if (s) { s.setAttribute("width", "216"); s.setAttribute("height", "216"); }
     return el;
   }
 
   async function preview(seedStr) {
-    if (!Temple.artDeployed()) { $("grid-note").textContent = "Library seni belum terpasang (config ART masih kosong)."; return; }
+    if (!Temple.artDeployed()) { $("grid-note").textContent = T("note.artPending"); return; }
     $("grid-note").textContent = "";
     try {
       const seed = seedStr || (BigInt("0x" + crypto.getRandomValues(new Uint8Array(32)).reduce((a, b) => a + b.toString(16).padStart(2, "0"), "")) % (2n ** 255n)).toString();
@@ -200,8 +179,10 @@
       const g = $("grid");
       g.prepend(tile(p.parts, p.tier, p.svg));
       while (g.children.length > 8) g.removeChild(g.lastChild);
-    } catch (e) { $("grid-note").textContent = "Preview gagal: " + UI.errText(e); }
+    } catch (e) { $("grid-note").textContent = T("note.previewFail") + ": " + UI.errText(e); }
   }
+
+  window.__retranslate = [load];
 
   UI.onReady(async () => {
     await load();
