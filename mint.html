@@ -25,13 +25,13 @@
 
 <div class="wrap">
   <h1 data-i18n="mint.h1">Mine a robo</h1>
-  <p class="sub" data-i18n="mint.sub">The quote below is your own <span class="mono">priceFor(wallet, n)</span> — first tier <b>0.50 USDT</b>, then a flat <b>1.00 USDT</b>, with no wallet quantity limit (max 100 units per PoW transaction). Every mint splits <b>75% to the holder pool</b> and <b>25% to the treasury</b>; supply is unlimited and mining closes 7 days after deployment.</p>
+  <p class="sub" data-i18n="mint.sub">The quote below is your own <span class="mono">priceFor(wallet, n)</span> — first tier <b>0.50 USDT</b>, then a flat <b>1.00 USDT</b>, with no wallet quantity limit (max 100 units per PoW transaction). Every mint splits <b>75% to the holder pool</b> and <b>25% to the treasury</b>; mint stays open for 7 days from deployment.</p>
 
   <div id="pending" class="panel gold" style="display:none" data-i18n="pending"></div>
 
   <div class="row" style="gap:12px; margin-bottom:16px">
     <div class="stat" style="flex:1"><div class="k" data-i18n="mint.stat.open">Mining</div><div class="v" id="g-open">—</div></div>
-    <div class="stat" style="flex:1"><div class="k" data-i18n="mint.stat.supply">Mined (unlimited)</div><div class="v" id="g-supply">—</div></div>
+    <div class="stat" style="flex:1"><div class="k" data-i18n="mint.stat.supply">Mined</div><div class="v" id="g-supply">—</div></div>
     <div class="stat" style="flex:1"><div class="k" data-i18n="mint.stat.ends">Mining ends</div><div class="v" id="g-end">—</div></div>
     <div class="stat" style="flex:1"><div class="k" data-i18n="mint.stat.target">Target</div><div class="v" id="g-bits">—</div></div>
     <div class="stat" style="flex:1"><div class="k" data-i18n="mint.stat.tier">Your first tier</div><div class="v gold" id="g-tier">—</div></div>
@@ -137,7 +137,7 @@
       state = await Temple.readSaleState();
       $("g-open").textContent = state.open ? T("meta.open") : T("meta.closed");
       $("g-open").style.color = state.open ? "var(--ok)" : "var(--bad)";
-      $("g-supply").textContent = state.supply.toLocaleString("en-US") + " · " + T("mint.unlimited");
+      $("g-supply").textContent = state.supply.toLocaleString("en-US");
       $("g-end").textContent = fmtEnd(state.miningEnd);
       const bits = state.target > 0n ? 256 - state.target.toString(2).length : 0;
       $("g-bits").textContent = bits + " bit";
